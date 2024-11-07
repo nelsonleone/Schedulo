@@ -13,6 +13,7 @@
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^4.0.2",
+		"@internationalized/date": "^3.5.6",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
@@ -50,6 +51,7 @@
 		"axios": "^1.7.7",
 		"axois": "^0.0.1-security",
 		"mode-watcher": "^0.4.1",
-		"svelte-outclick": "^4.0.3"
+		"svelte-outclick": "^4.0.3",
+		"svelte-radix": "^2.0.1"
 	}
 }

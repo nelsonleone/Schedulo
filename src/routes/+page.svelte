@@ -45,7 +45,6 @@
     let showAddBoardForm = false;
     let showAddTaskForm = false;
     let showMobileBox = false;
-    let addTaskBoardID : string | null = null;
     let themeMode : any;
 
     const unsubscribe = mode.subscribe((val) => {
@@ -129,8 +128,6 @@
                             <span>+ Create New Board</span>
                         </Button>
                     </div>
-                    {:else}
-                    <AuthPanel formAction="?/login" />
                 {/if}
     
                 <ColorSwitcher />
@@ -189,15 +186,17 @@
                 {/if}
         
                 {:else}
-                <div class="flex justify-center items-center h-full">
+                <div class="flex justify-center flex-col items-center mt-20">
                     <h2 role="alert" class="text-2xl font-quicksand underline font-semibold text-slate-400 text-center">
                         Please Log In
                     </h2>
+
+                    <AuthPanel formAction="?/login" />
                 </div>
             {/if}
         </div>
 
-        {#if data.error}
+        {#if data.error && $authStateStore.authenticated}
             <div class="flex flex-col justify-center items-center my-20">
                 <p role="alert" class="font-medium text-center font-quicksand flex items-center justify-center gap-2">
                     <Icon icon="fluent:cloud-error-20-regular" class="text-4xl text-red-500" />
@@ -217,5 +216,5 @@
     </div>
     
     <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => showAddBoardForm = e.detail} />
-    <AddTask boardID={addTaskBoardID}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
+    <AddTask boardID={$activeBoardTab?.id}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
 </div>

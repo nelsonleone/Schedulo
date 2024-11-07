@@ -26,8 +26,8 @@ interface Subtask {
 
 interface Task {
     id: string,
-    boardId: string,
-    userId: string,
+    board_id: string,
+    user_id: string,
     title: string,
     description: string,
     position: number,

@@ -11,14 +11,24 @@
 	import { createEventDispatcher } from "svelte";
 	import ErrorPara from "./ErrorPara.svelte";
 	import LoadingBtn from "../Buttons/LoadingBtn.svelte";
+	import DatePicker from "../DatePicker.svelte";
+	import { addTaskSchema } from "$lib/schemas/add_task";
+
+
+    interface RefinedFormError {
+        title: string | null,
+        subtasks: string[] | null,
+        status: string | null,
+        description: string[] | null
+    }
 
     export let boardID;
     export let showAddTaskForm = false;
 
-    let board_columns = $userBoardData.find(v => v.id === boardID)?.board_columns || [];
+    $: board_columns = $userBoardData.find(v => v.id === boardID)?.board_columns || [];
 
     let isCreatingBoard = false;
-    let errors : { name: string | null, columns: string[] | null } = { name: null, columns: null }
+    let errors : RefinedFormError = { title: null, subtasks: null, status: null, description: null }
     let subTasksEg = [
         "Buy new pencils",
         "start clean shading",
@@ -32,26 +42,26 @@
             isCreatingBoard = true;
             const formData = new FormData(e.currentTarget)
 
-            const { name, ...rest } = Object.fromEntries(formData.entries())
+            const { title, description, dueDate, ...rest } = Object.fromEntries(formData.entries())
 
-            const columnsDataArr = Object.values(rest).filter(v => v !== "")
+            const subTasksDataArr = Object.values(rest).filter(v => v !== "")
 
             const objData = {
-                name,
-                columns: columnsDataArr
+                title,
+                description,
+                dueDate,
+                subtasks: subTasksDataArr
             }
 
-            const validationResult = createBoardSchema.safeParse(objData)
+            const validationResult = addTaskSchema.safeParse(objData)
 
             if (!validationResult.success) {
                 const fieldErrors = validationResult.error.flatten().fieldErrors;
                 
-                errors = {
-                    name: fieldErrors.name ? fieldErrors.name[0] : null,
-                    columns : fieldErrors.columns ? fieldErrors.columns : null
-                }
+                console.log(fieldErrors)
                 return;
             }
+            return;
 
             const response = await fetch(e.currentTarget.action,{
                 body: JSON.stringify(objData),
@@ -94,20 +104,20 @@
         
         <div class="flex w-full max-w-sm flex-col my-6">
             <Label for="title" class="font-medium">Title</Label>
-            <Input type="text" name="name" id="title" placeholder="e.g Make a sketch" class="mt-3" />
-            {#if errors.name}
+            <Input type="text" name="title" id="title" placeholder="e.g Make a sketch" class="mt-3" />
+            {#if errors.title}
                 <ErrorPara>
-                    {errors.name}
+                    {errors.title}
                 </ErrorPara>
             {/if}
         </div>
         
         <div class="flex w-full max-w-sm flex-col my-6">
-            <Label for="description" class="font-medium">Description</Label>
-            <Input type="text" name="name" id="description" placeholder="e.g I need to make a sketch of the structure" class="mt-3" />
-            {#if errors.name}
+            <Label for="description" class="font-medium">Description (optional)</Label>
+            <Input type="text" name="description" id="description" placeholder="e.g I need to make a sketch of the structure" class="mt-3" />
+            {#if errors.description}
                 <ErrorPara>
-                    {errors.name}
+                    {errors.description}
                 </ErrorPara>
             {/if}
         </div>
@@ -117,7 +127,7 @@
             {#each subTasksEg as val, index (index)}
                 <div class="flex w-full items-center justify-between gap-3 my-3">
                     <Input type="text" name="subtask-{index}" id="subtask-{index}" placeholder={val} class="flex-grow" />
-                    <button class="flex items-center justify-center p-1" on:click={() => subTasksEg = subTasksEg.filter((v,i) => i !== index)}>
+                    <button class="flex items-center justify-center p-1" on:click={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
                         <Icon icon="lsicon:close-small-outline" class="text-lg" />
                         <span class="sr-only">Remove Subtask</span>
                     </button>
@@ -125,29 +135,33 @@
             {/each}
             <Button type="button" on:click={() => subTasksEg = [...subTasksEg,""]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add New Subtask</Button>
 
-            {#if errors.columns?.length}
+            {#if errors.subtasks?.length}
                 <ErrorPara>
-                    {errors.columns[0]} (Check columns)
+                    {errors.subtasks[0]} (Check columns)
                 </ErrorPara>
             {/if}
         </div>
 
         <div class="flex w-full max-w-sm flex-col my-6">
             <Label for="status" class="font-medium">Status</Label>
-            <select id="status">
+            <select id="status" class="p-2 rounded my-2">
                 {#each board_columns as column}
-                    <option value={column.position}>{column.name}</option>
+                    <option value={column.position} class="font-manrope font-medium text-sm">{column.name}</option>
                 {/each}
             </select>
-            {#if errors.name}
+            {#if errors.status}
                 <ErrorPara>
-                    {errors.name}
+                    {errors.status}
                 </ErrorPara>
             {/if}
         </div>
+        <div class="flex w-full max-w-sm flex-col my-6">
+            <Label for="status" class="font-medium">Due Date (optional):</Label>
+            <DatePicker />
+        </div>
     
         <div class="flex flex-col gap-3 mt-5">
-            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Create Board</LoadingBtn>
+            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Add Task</LoadingBtn>
         </div>
     </form>
 </OutClick>

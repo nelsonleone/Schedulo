@@ -10,7 +10,9 @@ export const load = async ({ locals: { supabase } }) => {
         const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
         const userID = (await supabase.auth.getUser()).data.user?.id;
 
-        console.log("userID",userID)
+        if (!userID){
+            throw new Error("Unauthorized request (unauthenticated user)")
+        }
         const getBoardsRes = await axios.get(`${PUBLIC_BACKEND_URL}/boards/${userID}`,{
             headers: {
                 Authorization:  `Bearer ${accessToken || ""}`
@@ -32,6 +34,8 @@ export const load = async ({ locals: { supabase } }) => {
         } else {
             errMssg = err.message || "Unexpected error occurred";
         }
+
+        console.log(errMssg)
                 
         return {
             error: {
