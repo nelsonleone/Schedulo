@@ -78,9 +78,9 @@
 
   .horizontal-scroll-grid {
     display: grid;
-    grid-auto-columns: calc(100% - 2rem);
+    grid-auto-columns: calc(100% - 4.5rem);
     grid-auto-flow: column;
-    grid-gap: 14px;
+    grid-gap: 12px;
     overflow-x: auto;
  }
 

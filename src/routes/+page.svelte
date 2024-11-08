@@ -14,6 +14,7 @@
 	import { checkNumOfCompletedSubtasks } from "$lib/helperFns/checkNumOfCompletedSubtasks.js";
 	import { browser } from "$app/environment";
 	import AddTask from "$lib/components/forms/AddTask.svelte";
+	import TaskViewAndEditForm from "$lib/components/forms/TaskViewAndEditForm.svelte";
 
 
     export let form;
@@ -46,6 +47,8 @@
     let showAddTaskForm = false;
     let showMobileBox = false;
     let themeMode : any;
+    let taskBeingViewed : Task;
+    let showTaskViewModal = false;
 
     const unsubscribe = mode.subscribe((val) => {
         themeMode = val;
@@ -159,7 +162,10 @@
                         <div class="grid grid-cols-1 gap-10 mt-7">
                             {#each boardDataToDisplay.tasks as task, i (i)}
                                 {#if task.position === column.position}
-                                    <button class="bg-[#2b2c37d3] text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center">
+                                    <button on:click={() => {
+                                        taskBeingViewed = task;
+                                        showTaskViewModal = true;
+                                    }} class="bg-[#2b2c37d3] text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center">
                                         <h3 class="font-medium">{task.title}</h3>
 
                                         {#if task.sub_tasks?.length}
@@ -215,6 +221,8 @@
         {/if}
     </div>
     
+
+    <TaskViewAndEditForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} />
     <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => showAddBoardForm = e.detail} />
-    <AddTask boardID={$activeBoardTab?.id}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
+    <AddTask boardID={$activeBoardTab?.id || ""}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
 </div>

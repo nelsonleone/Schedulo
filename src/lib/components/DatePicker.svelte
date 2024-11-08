@@ -1,28 +1,47 @@
 <script lang="ts">
-    import CalendarIcon from "svelte-radix/Calendar.svelte";
+    import CalendarIcon from "lucide-svelte/icons/calendar";
     import {
      DateFormatter,
      type DateValue,
-     getLocalTimeZone
+     getLocalTimeZone,
+     today
     } from "@internationalized/date";
     import { cn } from "$lib/utils.js";
     import { Button } from "$lib/components/ui/button/index.js";
     import { Calendar } from "$lib/components/ui/calendar/index.js";
     import * as Popover from "$lib/components/ui/popover/index.js";
+    import * as Select from "$lib/components/ui/select/index.js";
+	import { createEventDispatcher } from "svelte";
     
+    export let value: DateValue | undefined = undefined;
+
     const df = new DateFormatter("en-US", {
-      dateStyle: "long"
+     dateStyle: "long"
     })
     
-    let value: DateValue | undefined = undefined;
-</script>
+
+    const dispatch = createEventDispatcher()
+
+    $: {
+        if (value){
+            dispatch("setDate",value)
+        }
+    }
     
-   <Popover.Root>
+    const items = [
+     { value: 0, label: "Today" },
+     { value: 1, label: "Tomorrow" },
+     { value: 3, label: "In 3 days" },
+     { value: 7, label: "In a week" }
+    ];
+   </script>
+    
+   <Popover.Root openFocus>
     <Popover.Trigger asChild let:builder>
      <Button
       variant="outline"
       class={cn(
-       "w-[240px] justify-start text-left font-normal",
+       "w-full justify-start text-left font-normal",
        !value && "text-muted-foreground"
       )}
       builders={[builder]}
@@ -31,7 +50,25 @@
       {value ? df.format(value.toDate(getLocalTimeZone())) : "Pick a date"}
      </Button>
     </Popover.Trigger>
-    <Popover.Content class="w-auto p-0" align="start">
-     <Calendar bind:value />
+    <Popover.Content class="flex w-auto flex-col space-y-2 p-2">
+     <Select.Root
+      {items}
+      onSelectedChange={(v) => {
+       if (!v) return;
+       value = today(getLocalTimeZone()).add({ days: v.value });
+      }}
+     >
+      <Select.Trigger>
+       <Select.Value placeholder="Select" />
+      </Select.Trigger>
+      <Select.Content>
+       {#each items as item}
+        <Select.Item value={item.value}>{item.label}</Select.Item>
+       {/each}
+      </Select.Content>
+     </Select.Root>
+     <div class="rounded-md border">
+      <Calendar bind:value />
+     </div>
     </Popover.Content>
    </Popover.Root>

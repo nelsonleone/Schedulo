@@ -13,5 +13,5 @@ export function assignColorsToColumns(columnsArray: Board_Column[], columnID: st
     
     if (columnIndex === -1) return "#b0bec5";
 
-    return "#9c27b0"
+    return COLORS[columnIndex]
 }
