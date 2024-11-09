@@ -32,6 +32,7 @@ interface Task {
     description: string,
     position: number,
     due_date: string,
+    is_completed: boolean,
     sub_tasks: Subtask[],
     created_at: string,
     updated_at: string,

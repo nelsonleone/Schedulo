@@ -46,6 +46,7 @@
 		"zod": "^3.23.8"
 	},
 	"dependencies": {
+		"@ct-taco/svelte": "^1.0.1",
 		"@supabase/ssr": "^0.5.1",
 		"@supabase/supabase-js": "^2.45.6",
 		"axios": "^1.7.7",

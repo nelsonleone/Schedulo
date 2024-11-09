@@ -169,7 +169,7 @@
                                         <h3 class="font-medium">{task.title}</h3>
 
                                         {#if task.sub_tasks?.length}
-                                            <p class="text-slate-700 text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)}/{task.sub_tasks.length} subtasks</p>
+                                            <p class="text-slate-400 mt-2 font-medium text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)}/{task.sub_tasks.length} subtasks</p>
                                         {:else}
                                             <p class="text-slate-400 mt-2 font-medium text-sm">No subtasks</p>
                                         {/if}
@@ -222,7 +222,7 @@
     </div>
     
 
-    <TaskViewAndEditForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} />
+    <TaskViewAndEditForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} on:closeTaskViewModal={(e) => showTaskViewModal = e.detail} />
     <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => showAddBoardForm = e.detail} />
     <AddTask boardID={$activeBoardTab?.id || ""}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
 </div>

@@ -69,7 +69,7 @@
             }
 
             const response = await fetch(e.currentTarget.action,{
-                body: JSON.stringify({ title, subtasks: subTasksDataArr, due_date: dueDate?.toString(), board_id: boardID, position: parseInt(status.toString()) }),
+                body: JSON.stringify({ title, subtasks: subTasksDataArr, description, due_date: dueDate?.toString(), board_id: boardID, position: parseInt(status.toString()) }),
                 method: "POST"
             }) 
 
@@ -86,7 +86,6 @@
             })
             
             await invalidateAll()
-            isCreatingBoard = false;
             dispatch("closeAddTaskForm",false)
         }
         catch(err: any | unknown){

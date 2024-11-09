@@ -19,12 +19,12 @@
         <DropdownMenuGroup>
             <DropdownMenuItem class="flex gap-2 items-center cursor-pointer">
                 <Icon class="text-2xl" icon="line-md:edit-filled" />
-                <span>Edit Board</span>
+                <span>Edit Task</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem class="flex gap-2 items-center cursor-pointer text-red-600">
                 <Icon class="text-2xl" icon="proicons:delete" />
-                <span>Delete Board</span>
+                <span>Delete Task</span>
             </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
