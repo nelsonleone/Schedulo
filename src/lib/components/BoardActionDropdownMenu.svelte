@@ -6,11 +6,54 @@
 	import DropdownMenuContent from "./ui/dropdown-menu/dropdown-menu-content.svelte";
 	import DropdownMenuItem from "./ui/dropdown-menu/dropdown-menu-item.svelte";
 	import { createEventDispatcher } from "svelte";
+	import { invalidateAll } from "$app/navigation";
+	import { alertStore, snackbarStore } from "$lib/store";
+	import { AlertSeverity } from "../../enums";
 
 
     export let boardID : string;
+    let processing = false;
     const dispatch = createEventDispatcher()
-    
+
+
+    const handleDeleteBoard = async () => {
+        try{
+            processing = true;
+            snackbarStore.set({
+                show: true,
+                mssg: "Processing",
+                loading: true
+            })
+
+            const response = await fetch("?/deleteBoard", {
+                method: "POST",
+                body: JSON.stringify({ board_id: boardID })
+            })
+
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(data.message)
+            }
+
+            snackbarStore.update(() => ({
+                loading: false, show: true, mssg: "Board Deleted Successfully"
+            }))
+
+            invalidateAll()
+        } catch (err: any) {
+            alertStore.set({
+                mssg: err.message || "An error occurred",
+                severity: AlertSeverity.error,
+                show: true
+            })
+
+            snackbarStore.update(() => ({
+                loading: false, show: false, mssg: ""
+            }))
+        } finally {
+            processing = false;
+        }
+    }
 </script>
     
 <DropdownMenu>
@@ -21,12 +64,12 @@
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56 font-manrope font-medium text-base">
         <DropdownMenuGroup>
-            <DropdownMenuItem on:click={() => dispatch("openEditBoardForm",true)} class="flex gap-2 items-center cursor-pointer">
+            <DropdownMenuItem disabled={processing} on:click={() => dispatch("openEditBoardForm",true)} class="flex open-edit-board-btn gap-2 items-center cursor-pointer">
                 <Icon class="text-2xl" icon="line-md:edit-filled" />
                 <span>Edit Board</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem class="flex gap-2 items-center cursor-pointer text-red-600">
+            <DropdownMenuItem on:click={handleDeleteBoard} disabled={processing} class="flex gap-2 items-center cursor-pointer text-red-600">
                 <Icon class="text-2xl" icon="proicons:delete" />
                 <span>Delete Board</span>
             </DropdownMenuItem>

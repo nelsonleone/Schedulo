@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-    import { OutClick } from "svelte-outclick";
 	import Button from "../ui/button/button.svelte";
 	import Icon from "@iconify/svelte";
 	import Label from "../ui/label/label.svelte";
@@ -11,6 +10,7 @@
 	import { AlertSeverity } from "../../../enums";
 	import TaskActionDropdown from "../TaskActionDropdown.svelte";
 	import TaskCompletedCheckbox from "./TaskCompletedCheckbox.svelte";
+	import Modal from "../Modal.svelte";
 
 
     const dispatch = createEventDispatcher()
@@ -122,51 +122,57 @@
     }
 </script>
 
-<form  method="POST" action="?/updateTask"  on:submit|preventDefault={handleSubmit} class="{showTaskViewModal ? "block" : "hidden"} p-6 pt-3 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80">
-    <div class="flex flex-row-reverse justify-between items-center">
-        <TaskActionDropdown on:delete={handleDeleteTask} />
-        <Button type="button" on:click={handleClose} class="bg-transparent text-white text-xl hover:bg-transparent">
-            <Icon icon="fa:close" />
-        </Button>
-    </div>
 
-    <div class="mt-2 pt-3 border-t flex justify-between items-center">
-        <h2 class="text-2xl font-semibold font-quicksand">{taskBeingViewed?.title}</h2>
-        <TaskCompletedCheckbox bind:checked={taskIsCompleted} />
-    </div>
-    {#if taskBeingViewed?.description}
-        <p class="block text-teal-500 mt-2 font-sm">{taskBeingViewed?.description}</p>
-    {/if}
-    <div class="mt-7">
-        {#if taskBeingViewed?.sub_tasks.length}
-            <p class="font-medium mb-3 text-sm">Substasks ({completedSubtasksCount}/{taskBeingViewed?.sub_tasks.length})</p>
-            {#each subtasksEdittedValue as subtask, i (i)}
-                <div class="my-3 bg-cyan-950/90 p-3 rounded">
-                    <SubtaskCheckbox 
-                        id={subtask.id}
-                        title={subtask.title}
-                        is_completed={subtask.is_completed} 
-                        on:setIsCompleted={(e) => {
-                            subtasksEdittedValue = subtasksEdittedValue.map(v => v.id === subtask.id ? {...v, is_completed: e.detail} : v)
-                        }}  
-                    />
+{#if showTaskViewModal}
+    <Modal>
+
+            <form  method="POST" action="?/updateTask"  on:submit|preventDefault={handleSubmit} class="p-6 pt-3 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80">
+                <div class="flex flex-row-reverse justify-between items-center">
+                    <TaskActionDropdown on:delete={handleDeleteTask} />
+                    <Button type="button" on:click={handleClose} class="bg-transparent text-white text-xl hover:bg-transparent">
+                        <Icon icon="fa:close" />
+                    </Button>
                 </div>
-            {/each}
-            {:else}
-            <p class="font-medium mb-2 text-sm">No Substask</p>
-        {/if}
-    </div>
-
-    <div class="flex w-full max-w-sm flex-col my-6">
-        <Label for="status" class="font-medium">Current Status</Label>
-        <select id="status" name="status" class="p-2 rounded mt-2">
-            {#each board_columns as column, i (i)}
-                <option value={column.position} class="font-manrope font-medium text-sm">{column.name}</option>
-            {/each}
-        </select>
-    </div>
-
-    <div class="flex flex-col gap-3 mt-5">
-        <LoadingBtn type={isDeleting ? "button" : "submit"} styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isUpdating}>Update Task</LoadingBtn>
-    </div>
-</form>
+        
+                <div class="mt-2 pt-3 border-t flex justify-between items-center">
+                    <h2 class="text-2xl font-semibold font-quicksand">{taskBeingViewed?.title}</h2>
+                    <TaskCompletedCheckbox bind:checked={taskIsCompleted} />
+                </div>
+                {#if taskBeingViewed?.description}
+                    <p class="block text-teal-500 mt-2 font-sm">{taskBeingViewed?.description}</p>
+                {/if}
+                <div class="mt-7">
+                    {#if taskBeingViewed?.sub_tasks.length}
+                        <p class="font-medium mb-3 text-sm">Substasks ({completedSubtasksCount}/{taskBeingViewed?.sub_tasks.length})</p>
+                        {#each subtasksEdittedValue as subtask, i (i)}
+                            <div class="my-3 bg-cyan-950/90 p-3 rounded">
+                                <SubtaskCheckbox 
+                                    id={subtask.id}
+                                    title={subtask.title}
+                                    is_completed={subtask.is_completed} 
+                                    on:setIsCompleted={(e) => {
+                                        subtasksEdittedValue = subtasksEdittedValue.map(v => v.id === subtask.id ? {...v, is_completed: e.detail} : v)
+                                    }}  
+                                />
+                            </div>
+                        {/each}
+                        {:else}
+                        <p class="font-medium mb-2 text-sm">No Substask</p>
+                    {/if}
+                </div>
+        
+                <div class="flex w-full max-w-sm flex-col my-6">
+                    <Label for="status" class="font-medium">Current Status</Label>
+                    <select id="status" name="status" class="p-2 rounded mt-2">
+                        {#each board_columns as column, i (i)}
+                            <option value={column.position} class="font-manrope font-medium text-sm">{column.name}</option>
+                        {/each}
+                    </select>
+                </div>
+        
+                <div class="flex flex-col gap-3 mt-5">
+                    <LoadingBtn type={isDeleting ? "button" : "submit"} styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isUpdating}>Update Task</LoadingBtn>
+                </div>
+            </form>
+    </Modal>
+{/if}

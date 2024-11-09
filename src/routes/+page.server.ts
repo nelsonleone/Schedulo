@@ -201,6 +201,41 @@ export const actions = {
 
 
 
+    deleteBoard: async ({ request, locals: { supabase } }: RequestEvent) => {
+        try {
+            const data = await request.json()
+            const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+            const userID = (await supabase.auth.getUser()).data.user?.id;
+    
+            if (!accessToken || !userID) {
+                throw error(401, { message: "Unauthorized request" })
+            }
+    
+            const res = await axios.delete(`${PUBLIC_BACKEND_URL}/boards/delete/${userID}?board_id=${data.board_id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+    
+            return { success: true, message: res.data.message || "Board Deleted Successfully" }
+        } catch (err: any) {    
+            let errMssg = "An error occurred";
+            if (err.response) {
+                errMssg = err.response.data.error || errMssg;
+            } else if (err.request) {
+                console.log("Request error:", err.request)
+                errMssg = "Request failed";
+            } else {
+                errMssg = err.message;
+            }
+    
+            return error(500, { message: errMssg })
+        }
+    },
+
+
+
+
     updateTask: async({ request, locals: { supabase } }: RequestEvent) => {
         try{
             const data = await request.json()

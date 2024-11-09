@@ -4,7 +4,7 @@
 	import { Switch } from "./ui/switch";
 
 </script>
-<form class="flex justify-between gap-5 max-w-full w-8/12 mx-auto mt-10 bg-slate-700 px-4 py-3 rounded">
+<form class="flex justify-between gap-5 max-w-full w-9/12 mx-auto mt-10 bg-slate-700 px-2 py-3 rounded md:mt-40 lg:px-4">
     <Icon class="text-2xl {$mode === "light" ? "text-teal-400" : ""}" icon="line-md:star-alt-twotone" />
     <Switch
         name="theme-switcher"

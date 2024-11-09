@@ -31,6 +31,9 @@ export const snackbarStore = writable<SnackbarProps>({
     mssg: ""
 })
 
+
+export const windowWidth = writable<{ isMobile: boolean | null}>({ isMobile: null})
+
 export const alertStore = writable<AlertProps>({
     show: false,
     mssg: "",

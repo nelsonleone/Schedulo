@@ -1,22 +1,29 @@
 <script lang="ts">
 	import { mode } from "mode-watcher";
 	import Logo from "./layout-components/Logo.svelte";
-	import { authStateStore, userBoardData } from "$lib/store";
+	import { authStateStore, userBoardData, windowWidth } from "$lib/store";
 	import Icon from "@iconify/svelte";
 	import Button from "./ui/button/button.svelte";
 	import ColorSwitcher from "./ColorSwitcher.svelte";
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
+	import { OutsideClick } from "./OutsideClick";
 
-
-    export let boardDataToDisplay : Board;
     export let showMobileBox : boolean;
 
     const dispatch = createEventDispatcher()
+
+    const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"mobile-box",$windowWidth.isMobile ? showMobileBox : false,dispatch,"closeMobileBox")
+
+    onMount(() => {
+        window.addEventListener('click',handleOutSideClick)
+
+        return () => window.removeEventListener("click",handleOutSideClick)
+    })
 </script>
 
 
 
-<div class="{showMobileBox ? "block" : "hidden"} fixed w-11/12 h-[26em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-md drop-shadow-lg shadow-gray-500/60">
+<div class="{showMobileBox ? "block" : "hidden"} fixed max-w-[90%] w-[27em] h-[26em] mobile-box z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-md drop-shadow-lg shadow-gray-500/60 md:left-0 md:mx-0 md:top-0 md:pt-40 mb-32 md:h-screen md:max-w-full md:w-full md:absolute">
     <Logo logoType={$mode === "dark" ? "wht" : "blk"} styles="hidden" />
 
     {#if $authStateStore.authenticated}
@@ -24,7 +31,10 @@
 
         <div class="my-7">
             {#each $userBoardData as board, i (i)}
-            <button on:click={(e) => console.log("shshdhs")} class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
+            <button on:click={(e) => {
+                dispatch("setBoardToDisplay",board)
+                dispatch("closeMobileBox",false)
+            }} class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
                 <Icon icon="tabler:table-column" class="text-2xl" />
                 <span>{board.name}</span>
             </button>
