@@ -64,7 +64,7 @@ const config: Config = {
 			},
 			animation: {
 				snackbar: 'slideInUp 0.5s ease-out forwards',
-				progress: 'progressBar 3s linear forwards',
+				progress: 'progressBar 3s linear infinite',
 			  },
 			keyframes: {
 				slideInUp: {

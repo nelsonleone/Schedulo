@@ -1,30 +1,30 @@
 <script lang="ts">
+	import { OutClick } from "svelte-outclick";
+	import Label from "../ui/label/label.svelte";
+	import Input from "../ui/input/input.svelte";
+	import { createEventDispatcher } from "svelte";
 	import { createBoardSchema } from "$lib/schemas/create_board";
-    import { OutClick } from "svelte-outclick"
 	import { alertStore, snackbarStore } from "$lib/store";
 	import { AlertSeverity } from "../../../enums";
-	import { Label } from "../ui/label";
-	import { Input } from "../ui/input";
-	import Icon from "@iconify/svelte";
-	import { Button } from "../ui/button";
-	import { createEventDispatcher } from "svelte";
 	import ErrorPara from "./ErrorPara.svelte";
+	import Button from "../ui/button/button.svelte";
 	import LoadingBtn from "../Buttons/LoadingBtn.svelte";
-    export let showAddBoardForm = false;
+	import Icon from "@iconify/svelte";
 
-    let isCreatingBoard = false;
+    export let boardBeingEditted : Board;
+    export let showEditBoardForm : boolean;
+
+    
+    let isEditting = false;
     let errors : { name: string | null, columns: string[] | null } = { name: null, columns: null }
-    let numOfColumns = [
-        "backlog",
-        "in progress",
-        "completed"
-    ]
+    
+    $: edittedBoardColumns = boardBeingEditted.board_columns.map(v => ({ name: v.name, position: v.position, id: v.id }))
 
     const dispatch = createEventDispatcher()
 
     async function handleSubmit(e: { currentTarget: EventTarget & HTMLFormElement}) {
         try{
-            isCreatingBoard = true;
+            isEditting = true;
             const formData = new FormData(e.currentTarget)
 
             const { name, ...rest } = Object.fromEntries(formData.entries())
@@ -62,10 +62,10 @@
 
             snackbarStore.set({
                 show: true,
-                mssg: "Board Created Successfully"
+                mssg: "Board Editted Successfully"
             })
 
-            dispatch("closeAddBoardForm",false)
+            dispatch("closeEditBoardForm",false)
         }
         catch(err: any | unknown){
             alertStore.set({
@@ -76,33 +76,32 @@
         }
 
         finally {
-            isCreatingBoard = false;
+            isEditting = false;
         }
     }
-
-
 </script>
 
-<OutClick onOutClick={() => dispatch("closeAddBoardForm",false)}>
-    <form  method="POST" action="?/createBoard"  on:submit|preventDefault={handleSubmit} class="{showAddBoardForm ? "block" : "hidden"} px-6 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80">
-        <h2 class="text-xl font-semibold font-quicksand mb-6">Add New Board</h2>
+<OutClick onOutClick={() => dispatch("closeEditBoardForm",false)}>
+    <form  method="POST" action="?/editBoard"  on:submit|preventDefault={handleSubmit} class="{showEditBoardForm ? "block" : "hidden"} px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-600/90">
+        
+        <h2 class="text-xl font-semibold font-quicksand mb-6">Edit Board</h2>
         
         <div class="flex w-full max-w-sm flex-col my-6">
-            <Label for="board-name" class="font-medium">Board Name</Label>
+            <Label for="name" class="font-medium">Board Name</Label>
             <Input type="text" name="name" id="board-name" placeholder="product launch" class="mt-3" />
-            {#if errors.name}
+            {#if errors?.name}
                 <ErrorPara>
-                    {errors.name}
+                    {errors?.name}
                 </ErrorPara>
             {/if}
         </div>
         
         <div>
             <p class="font-medium mb-2 text-sm">Columns</p>
-            {#each numOfColumns as col, index (index)}
+            {#each edittedBoardColumns as col, index (index)}
             <div class="flex w-full items-center justify-between gap-3 my-3">
-                <Input type="text" name="column-{index}" id="column-{index}" placeholder={col} class="flex-grow" />
-                <button class="flex items-center justify-center p-1" on:click={() => numOfColumns = numOfColumns.filter((v,i) => i !== index)}>
+                <Input type="text" name="column-{index}" id="column-{index}" placeholder={col.name} class="flex-grow" />
+                <button class="flex items-center justify-center p-1" on:click={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
                     <Icon icon="lsicon:close-small-outline" class="text-lg" />
                     <span class="sr-only">Remove Column</span>
                 </button>
@@ -117,8 +116,8 @@
         </div>
     
         <div class="flex flex-col gap-3 mt-5">
-            <Button type="button" on:click={() => numOfColumns = [...numOfColumns,""]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add Column</Button>
-            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Create Board</LoadingBtn>
+            <Button type="button" on:click={() => edittedBoardColumns = [...edittedBoardColumns,{ name: "", id: "", position: edittedBoardColumns[edittedBoardColumns.length - 1].position }]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add Column</Button>
+            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isEditting}>Create Board</LoadingBtn>
         </div>
     </form>
-</OutClick>
+</OutClick> 

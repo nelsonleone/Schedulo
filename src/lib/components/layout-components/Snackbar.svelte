@@ -6,7 +6,7 @@
     let timer: NodeJS.Timeout;
   
     $: {
-        if ($snackbarStore.show) {
+        if ($snackbarStore.show && !$snackbarStore.loading) {
         timer = setTimeout(() => {
           snackbarStore.set({ show: false, mssg: "" })
         }, 3000)

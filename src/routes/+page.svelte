@@ -14,7 +14,8 @@
 	import { checkNumOfCompletedSubtasks } from "$lib/helperFns/checkNumOfCompletedSubtasks.js";
 	import { browser } from "$app/environment";
 	import AddTask from "$lib/components/forms/AddTask.svelte";
-	import TaskViewAndEditForm from "$lib/components/forms/TaskViewAndEditForm.svelte";
+	import TaskViewAndUpdateForm from "$lib/components/forms/TaskViewAndUpdateForm.svelte";
+	import EditBoardForm from "$lib/components/forms/EditBoardForm.svelte";
 
 
     export let form;
@@ -49,6 +50,7 @@
     let themeMode : any;
     let taskBeingViewed : Task;
     let showTaskViewModal = false;
+    let showEditBoardForm = false;
 
     const unsubscribe = mode.subscribe((val) => {
         themeMode = val;
@@ -169,7 +171,7 @@
                                         <h3 class="font-medium">{task.title}</h3>
 
                                         {#if task.sub_tasks?.length}
-                                            <p class="text-slate-400 mt-2 font-medium text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)}/{task.sub_tasks.length} subtasks</p>
+                                            <p class="text-slate-400 mt-2 font-medium text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)} of {task.sub_tasks.length} subtasks</p>
                                         {:else}
                                             <p class="text-slate-400 mt-2 font-medium text-sm">No subtasks</p>
                                         {/if}
@@ -222,7 +224,10 @@
     </div>
     
 
-    <TaskViewAndEditForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} on:closeTaskViewModal={(e) => showTaskViewModal = e.detail} />
+
+
+    <EditBoardForm on:closeEditBoardForm={(e) => showEditBoardForm = e.detail} {showEditBoardForm} boardBeingEditted={boardDataToDisplay!} />
+    <TaskViewAndUpdateForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} on:closeTaskViewModal={(e) => showTaskViewModal = e.detail} />
     <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => showAddBoardForm = e.detail} />
     <AddTask boardID={$activeBoardTab?.id || ""}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
 </div>

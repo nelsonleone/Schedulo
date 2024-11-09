@@ -166,10 +166,7 @@ export const actions = {
                 return error(401,{
                     message: "Unauthorized request"
                 })
-            }
-
-            console.log(data)
-            
+            }            
     
             const res = await axios.patch(`${PUBLIC_BACKEND_URL}/tasks/update/${data.task_id}`,{
                 ...data,
@@ -200,5 +197,42 @@ export const actions = {
                 message: errMssg
             })
         }
-    }
+    },
+
+
+
+
+    deleteTask: async ({ request, locals: { supabase } }: RequestEvent) => {
+        try {
+            const data = await request.json()
+            const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+            const userID = (await supabase.auth.getUser()).data.user?.id;
+    
+            if (!accessToken || !userID) {
+                throw error(401, { message: "Unauthorized request" })
+            }
+    
+            const res = await axios.delete(`${PUBLIC_BACKEND_URL}/tasks/delete/${data.task_id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+    
+            return { success: true, message: res.data.message || "Task Deleted Successfully" }
+        } catch (err: any) {
+            console.error("Error in deleteTask:", err)
+    
+            let errMssg = "An error occurred";
+            if (err.response) {
+                errMssg = err.response.data.error || errMssg;
+            } else if (err.request) {
+                console.log("Request error:", err.request)
+                errMssg = "Request failed";
+            } else {
+                errMssg = err.message;
+            }
+    
+            return error(500, { message: errMssg })
+        }
+    }    
 }
