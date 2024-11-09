@@ -5,7 +5,11 @@
 	import DropdownMenuSeparator from "./ui/dropdown-menu/dropdown-menu-separator.svelte";
 	import DropdownMenuContent from "./ui/dropdown-menu/dropdown-menu-content.svelte";
 	import DropdownMenuItem from "./ui/dropdown-menu/dropdown-menu-item.svelte";
+	import { createEventDispatcher } from "svelte";
 
+
+    export let boardID : string;
+    const dispatch = createEventDispatcher()
     
 </script>
     
@@ -17,7 +21,7 @@
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56 font-manrope font-medium text-base">
         <DropdownMenuGroup>
-            <DropdownMenuItem class="flex gap-2 items-center cursor-pointer">
+            <DropdownMenuItem on:click={() => dispatch("openEditBoardForm",true)} class="flex gap-2 items-center cursor-pointer">
                 <Icon class="text-2xl" icon="line-md:edit-filled" />
                 <span>Edit Board</span>
             </DropdownMenuItem>

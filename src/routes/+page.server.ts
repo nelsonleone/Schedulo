@@ -154,6 +154,51 @@ export const actions = {
     },
 
 
+    editBoard: async({ request, locals: { supabase } }: RequestEvent) => {
+        try{
+            const data = await request.json()
+            const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+            const userID = (await supabase.auth.getUser()).data.user?.id;
+
+            if (!accessToken || !userID){
+                return error(401,{
+                    message: "Unauthorized request"
+                })
+            }
+
+            console.log(data)
+            
+    
+            const res = await axios.patch(`${PUBLIC_BACKEND_URL}/boards/update/${userID}`,{
+                ...data,
+            },{
+                headers: {
+                    Authorization:  `Bearer ${accessToken || ""}`
+                }
+            })
+
+            return { success: true, message: res.data.message || "Task Added Successfully"}
+        }
+        catch(err: any | unknown) {
+            let errMssg = "An error occurred";
+            
+            if (err.response) {
+                errMssg = err.response.data.error;
+            } 
+            else if (err.request) {
+                console.log(err.request)
+               errMssg = "Request Failed";
+            } 
+            else {
+                errMssg = err.message;
+            }            
+            return error(500,{
+                message: errMssg
+            })
+        }
+    },
+
+
 
 
     updateTask: async({ request, locals: { supabase } }: RequestEvent) => {

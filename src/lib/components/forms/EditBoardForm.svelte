@@ -10,6 +10,7 @@
 	import Button from "../ui/button/button.svelte";
 	import LoadingBtn from "../Buttons/LoadingBtn.svelte";
 	import Icon from "@iconify/svelte";
+	import { invalidateAll } from "$app/navigation";
 
     export let boardBeingEditted : Board;
     export let showEditBoardForm : boolean;
@@ -18,22 +19,18 @@
     let isEditting = false;
     let errors : { name: string | null, columns: string[] | null } = { name: null, columns: null }
     
-    $: edittedBoardColumns = boardBeingEditted.board_columns.map(v => ({ name: v.name, position: v.position, id: v.id }))
-
+    let edittedBoardColumns = boardBeingEditted?.board_columns.map(v => ({ name: v.name, position: v.position, id: v.id }))
     const dispatch = createEventDispatcher()
 
     async function handleSubmit(e: { currentTarget: EventTarget & HTMLFormElement}) {
         try{
             isEditting = true;
             const formData = new FormData(e.currentTarget)
-
-            const { name, ...rest } = Object.fromEntries(formData.entries())
-
-            const columnsDataArr = Object.values(rest).filter(v => v !== "")
+            const columnsArrWithJustNames = edittedBoardColumns.map(v => v.name)
 
             const objData = {
-                name,
-                columns: columnsDataArr
+                name: formData.get("name"),
+                columns: columnsArrWithJustNames
             }
 
             const validationResult = createBoardSchema.safeParse(objData)
@@ -49,7 +46,7 @@
             }
 
             const response = await fetch(e.currentTarget.action,{
-                body: JSON.stringify(objData),
+                body: JSON.stringify({ name: objData.name, columns: edittedBoardColumns, board_id: boardBeingEditted?.id }),
                 method: "POST"
             }) 
 
@@ -65,6 +62,7 @@
                 mssg: "Board Editted Successfully"
             })
 
+            invalidateAll()
             dispatch("closeEditBoardForm",false)
         }
         catch(err: any | unknown){
@@ -88,7 +86,7 @@
         
         <div class="flex w-full max-w-sm flex-col my-6">
             <Label for="name" class="font-medium">Board Name</Label>
-            <Input type="text" name="name" id="board-name" placeholder="product launch" class="mt-3" />
+            <Input type="text" name="name" id="board-name" value={boardBeingEditted?.name} placeholder="product launch" class="mt-3" />
             {#if errors?.name}
                 <ErrorPara>
                     {errors?.name}
@@ -100,7 +98,15 @@
             <p class="font-medium mb-2 text-sm">Columns</p>
             {#each edittedBoardColumns as col, index (index)}
             <div class="flex w-full items-center justify-between gap-3 my-3">
-                <Input type="text" name="column-{index}" id="column-{index}" placeholder={col.name} class="flex-grow" />
+                <Input 
+                    type="text" 
+                    name="column-{index}" 
+                    value={col.name} 
+                    id="column-{index}" 
+                    on:change={(e) => edittedBoardColumns = edittedBoardColumns.map(((v,i) => i === index ? {...v, name: e.currentTarget.value } : v))}
+                    placeholder={col.name} 
+                    class="flex-grow" 
+                />
                 <button class="flex items-center justify-center p-1" on:click={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
                     <Icon icon="lsicon:close-small-outline" class="text-lg" />
                     <span class="sr-only">Remove Column</span>
@@ -116,8 +122,8 @@
         </div>
     
         <div class="flex flex-col gap-3 mt-5">
-            <Button type="button" on:click={() => edittedBoardColumns = [...edittedBoardColumns,{ name: "", id: "", position: edittedBoardColumns[edittedBoardColumns.length - 1].position }]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add Column</Button>
-            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isEditting}>Create Board</LoadingBtn>
+            <Button type="button" on:click={() => edittedBoardColumns = [...edittedBoardColumns,{ name: "", id: "", position: edittedBoardColumns.length }]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add Column</Button>
+            <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isEditting}>Edit Board</LoadingBtn>
         </div>
     </form>
 </OutClick> 

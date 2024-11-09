@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createBoardSchema } from "$lib/schemas/create_board";
-    import { OutClick } from "svelte-outclick"
 	import { alertStore, snackbarStore } from "$lib/store";
 	import { AlertSeverity } from "../../../enums";
 	import { Label } from "../ui/label";
@@ -10,6 +9,8 @@
 	import { createEventDispatcher } from "svelte";
 	import ErrorPara from "./ErrorPara.svelte";
 	import LoadingBtn from "../Buttons/LoadingBtn.svelte";
+	import { invalidateAll } from "$app/navigation";
+	import OutsideClick from "../OutsideClick.svelte";
     export let showAddBoardForm = false;
 
     let isCreatingBoard = false;
@@ -65,6 +66,7 @@
                 mssg: "Board Created Successfully"
             })
 
+            invalidateAll()
             dispatch("closeAddBoardForm",false)
         }
         catch(err: any | unknown){
@@ -82,8 +84,7 @@
 
 
 </script>
-
-<OutClick onOutClick={() => dispatch("closeAddBoardForm",false)}>
+<OutsideClick on:outclick={() => dispatch("closeAddBoardForm",false)}>
     <form  method="POST" action="?/createBoard"  on:submit|preventDefault={handleSubmit} class="{showAddBoardForm ? "block" : "hidden"} px-6 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80">
         <h2 class="text-xl font-semibold font-quicksand mb-6">Add New Board</h2>
         
@@ -108,7 +109,7 @@
                 </button>
             </div>        
             {/each}
-
+    
             {#if errors.columns?.length}
                 <ErrorPara>
                     {errors.columns[0]} (Check columns)
@@ -121,4 +122,4 @@
             <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Create Board</LoadingBtn>
         </div>
     </form>
-</OutClick>
+</OutsideClick>

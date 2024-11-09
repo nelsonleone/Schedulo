@@ -4,7 +4,7 @@
 	import AuthPanel from "$lib/components/layout-components/AuthPanel.svelte";
     import Logo from "$lib/components/layout-components/Logo.svelte";
     import { Button } from "$lib/components/ui/button";
-	import { activeBoardTab, alertStore, authStateStore, userBoardData } from "$lib/store";
+	import { alertStore, authStateStore, userBoardData } from "$lib/store";
     import Icon from "@iconify/svelte";
     import { mode } from "mode-watcher";
     import { onDestroy } from "svelte";
@@ -16,26 +16,23 @@
 	import AddTask from "$lib/components/forms/AddTask.svelte";
 	import TaskViewAndUpdateForm from "$lib/components/forms/TaskViewAndUpdateForm.svelte";
 	import EditBoardForm from "$lib/components/forms/EditBoardForm.svelte";
+	import MobileBox from "$lib/components/MobileBox.svelte";
 
 
     export let form;
-    export let data : { boards: Board[], error?: { status: number, message: string }};
+    export let data : { boards: Board[], error?: { status: number, message: string }}
+    let boardDataToDisplay = $userBoardData[0]
 
     $: {
         if (data.boards){
             userBoardData.set(data.boards)
-            activeBoardTab.set({
-                name: data.boards[0].name,
-                id: data.boards[0].id
-            })
+            boardDataToDisplay = $userBoardData[0]
         }
         else{
             userBoardData.set([])
-            activeBoardTab.set(null)
         }
     }
 
-    $: boardDataToDisplay = $userBoardData.find(v => v.id === $activeBoardTab?.id)
 
     $: {
         if (boardDataToDisplay) {
@@ -83,16 +80,21 @@
         {:else}
         <Logo styles="w-40 block" logoType="blk" />
     {/if}
-</header>
+</header> 
 <div class="min-h-screen">
-    <main class="px-4 md:px-8 lg:px-16 pb-5 pt-5">
+    <div class="px-4 md:px-8 lg:px-16 pb-5 pt-5">
         <h1 class="sr-only">Task Manager Dashboard</h1>
-        {#if !data.error && $activeBoardTab?.id && $activeBoardTab.name}
+        {#if !data.error && boardDataToDisplay?.id && boardDataToDisplay.name}
             <div class="flex justify-between items-center pb-5 z-10 border-b px-4 md:px-8 lg:px-16">
-                <div class="flex gap-1 items-center">
-                    <h2 class="font-semibold text-2xl capitalize font-quicksand text-slate-100 text-ellipsis overflow-hidden whitespace-nowrap">
-                        <button on:click={() => showMobileBox = true}>{$activeBoardTab?.name}</button>
+                <div class="flex gap-1 items-center w-[75%]">
+                    <h2 
+                        class="font-semibold text-2xl max-w-full block text-ellipsis capitalize font-quicksand text-slate-100 overflow-hidden whitespace-nowrap"
+                    >
+                        <button on:click={() => showMobileBox = true} class="w-full text-left">
+                        {boardDataToDisplay?.name}
+                        </button>
                     </h2>
+                  
                     <Icon icon="basil:caret-down-solid" aria-hidden="true" class="text-emerald-500 text-2xl" />
                 </div>
                 
@@ -103,7 +105,7 @@
                         <span class="hidden">Add New Task</span>
                     </Button>
     
-                    <BoardActionDropdownMenu />
+                    <BoardActionDropdownMenu boardID={boardDataToDisplay?.id || ""} on:openEditBoardForm={(e) => showEditBoardForm = e.detail} />
                 </div>
             </div>
             {:else if !data.error && boardDataToDisplay}
@@ -114,37 +116,7 @@
                 </button>
             </div>
         {/if}
-    
-        {#if showMobileBox}
-            <div class="fixed w-11/12 h-[26em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-md drop-shadow-lg shadow-gray-500/60">
-                <Logo logoType={$mode === "dark" ? "wht" : "blk"} styles="hidden" />
-    
-                {#if $authStateStore.authenticated}
-                    <h3 class="font-semibold mx-6">All Boards ({$userBoardData.length})</h3>
-    
-                    <div class="my-7">
-                        {#each $userBoardData as board, i (i)}
-                        <button class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
-                            <Icon icon="tabler:table-column" class="text-2xl" />
-                            <span>{board.name}</span>
-                        </button>
-                        {/each}
-                        <Button class="font-semibold p-3 rounded-e mx-auto block my-4 text-center text-base_color1 h-fit bg-teal-600">
-                            <span>+ Create New Board</span>
-                        </Button>
-                    </div>
-                {/if}
-    
-                <ColorSwitcher />
-                <Button class="hidden">
-                    <Icon icon="ri:collapse-diagonal-line" />
-                </Button>
-                <button class="absolute top-4 right-7 text-2xl" on:click={() => showMobileBox = false}>
-                    <Icon icon="fa:close" />
-                </button>
-            </div>
-        {/if}
-    </main>
+    </div>
     
     <div>
         <div class="horizontal-scroll-grid {data.boards ? "min-h-[20em]" : ""}">
@@ -225,9 +197,12 @@
     
 
 
-
+    <MobileBox {showMobileBox} on:closeMobileBox={(e) => showMobileBox = e.detail} {boardDataToDisplay} on:showAddBoardForm={(e) => showAddBoardForm = e.detail} />
     <EditBoardForm on:closeEditBoardForm={(e) => showEditBoardForm = e.detail} {showEditBoardForm} boardBeingEditted={boardDataToDisplay!} />
-    <TaskViewAndUpdateForm boardID={$activeBoardTab?.id || ""} {taskBeingViewed} {showTaskViewModal} on:closeTaskViewModal={(e) => showTaskViewModal = e.detail} />
-    <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => showAddBoardForm = e.detail} />
-    <AddTask boardID={$activeBoardTab?.id || ""}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
+    <TaskViewAndUpdateForm boardID={boardDataToDisplay?.id} {taskBeingViewed} {showTaskViewModal} on:closeTaskViewModal={(e) => showTaskViewModal = e.detail} />
+    <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => {
+       showAddBoardForm = e.detail
+       showMobileBox = false
+    }} />
+    <AddTask boardID={boardDataToDisplay?.id}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
 </div>

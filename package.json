@@ -52,7 +52,6 @@
 		"axios": "^1.7.7",
 		"axois": "^0.0.1-security",
 		"mode-watcher": "^0.4.1",
-		"svelte-outclick": "^4.0.3",
 		"svelte-radix": "^2.0.1"
 	}
 }
