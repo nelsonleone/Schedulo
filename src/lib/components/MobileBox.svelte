@@ -10,12 +10,16 @@
 	import AvatarImage from "./ui/avatar/avatar-image.svelte";
 	import AvatarFallback from "./ui/avatar/avatar-fallback.svelte";
 	import Logo from "./layout-components/Logo.svelte";
+	import { supabaseClient } from "$lib/auth/supabaseClient";
 
     export let showMobileBox : boolean;
     export let themeMode;
     const dispatch = createEventDispatcher()
 
-    
+    const handleLogout = async() => {
+        await supabaseClient.auth.signOut()
+        window.location.reload()
+    }
 
     const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"mobile-box",$windowWidth.isMobile ? showMobileBox : false,dispatch,"closeMobileBox")
 
@@ -126,7 +130,7 @@
                     </Avatar>
                     <p class="font-semibold">{$authStateStore.userDetails?.email}</p>
                 </div>
-                <Button class="mx-auto flex bg-red-700 dark:text-base_color1 hover:bg-red-500">
+                <Button class="mx-auto flex bg-red-700 dark:text-base_color1 hover:bg-red-500" on:click={handleLogout}>
                     <span>Logout</span>
                     <Icon class="text-3xl" icon="basil:logout-outline" />
                 </Button>
