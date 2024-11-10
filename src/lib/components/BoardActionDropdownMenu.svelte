@@ -39,7 +39,7 @@
                 loading: false, show: true, mssg: "Board Deleted Successfully"
             }))
 
-            invalidateAll()
+            await invalidateAll()
         } catch (err: any) {
             alertStore.set({
                 mssg: err.message || "An error occurred",

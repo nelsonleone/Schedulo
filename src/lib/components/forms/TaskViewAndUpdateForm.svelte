@@ -57,7 +57,7 @@
                 mssg: "Task Updated Successfully"
             })
             
-            invalidateAll()
+            await invalidateAll()
             dispatch("closeTaskViewModal",false)
         }
         catch(err: any | unknown){
@@ -98,7 +98,7 @@
                 loading: false, show: true, mssg: "Task Deleted Successfully"
             }))
 
-            invalidateAll();
+            await invalidateAll();
             dispatch("closeTaskViewModal", false)
         } catch (err: any) {
             alertStore.set({

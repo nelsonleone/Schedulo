@@ -23,7 +23,7 @@
   </script>
   
   {#if $alertStore.show}
-    <div class="alert fixed top-4 z-50 right-4 flex items-center gap-3 p-3 rounded-lg shadow-lg transition-opacity duration-500"
+    <div class="alert fixed top-4 z-[60] right-4 flex items-center gap-3 p-3 rounded-lg shadow-lg transition-opacity duration-500"
         class:alert-success={$alertStore.severity === 'success'}
         class:alert-error={$alertStore.severity === 'error'}
         transition:fade

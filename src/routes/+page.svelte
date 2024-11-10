@@ -256,7 +256,9 @@
             {/if}
                 <AddBoardForm {showAddBoardForm} on:closeAddBoardForm={e => {
                     showAddBoardForm = e.detail
-                    showMobileBox = false
+                    if ($windowWidth.isMobile){
+                        showMobileBox = false
+                    }
             }} />
             <AddTask boardID={boardDataToDisplay?.id}  {showAddTaskForm} on:closeAddTaskForm={e => showAddTaskForm = e.detail} />
         </div>

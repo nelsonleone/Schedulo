@@ -27,7 +27,7 @@
     
     const dispatch = createEventDispatcher()
 
-    const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"edit-board-form",showEditBoardForm,dispatch,"closeEditBoardForm")
+    const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"edit-board-form",isEditting ? false : showEditBoardForm,dispatch,"closeEditBoardForm")
 
     onMount(() => {
         window.addEventListener('click',handleOutSideClick)
@@ -75,7 +75,7 @@
                 mssg: "Board Editted Successfully"
             })
 
-            invalidateAll()
+            await invalidateAll()
             dispatch("closeEditBoardForm",false)
         }
         catch(err: any | unknown){
@@ -123,7 +123,7 @@
                         placeholder={col.name} 
                         class="flex-grow" 
                     />
-                    <button class="flex items-center justify-center p-1" on:click={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
+                    <button class="flex items-center justify-center p-1" on:click|stopPropagation={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
                         <Icon icon="lsicon:close-small-outline" class="text-lg" />
                         <span class="sr-only">Remove Column</span>
                     </button>

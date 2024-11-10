@@ -27,6 +27,9 @@
 	})
 </script>
 
+<svelte:head>
+	<title>Schedulo</title>
+</svelte:head>
 <ModeWatcher />
 <Snackbar />
 <Alert />

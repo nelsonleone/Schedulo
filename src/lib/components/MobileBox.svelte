@@ -31,15 +31,18 @@
 
         <div class="my-7">
             {#each $userBoardData as board, i (i)}
-            <button on:click={(e) => {
+            <button on:click|stopPropagation={() => {
                 dispatch("setBoardToDisplay",board)
-                dispatch("closeMobileBox",false)
+                $windowWidth.isMobile && dispatch("closeMobileBox",false)
             }} class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e text-white bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
                 <Icon icon="tabler:table-column" class="text-2xl" />
                 <span>{board.name}</span>
             </button>
             {/each}
-            <Button on:click={() => dispatch("showAddBoardForm",true)} class="font-semibold p-3 rounded-e mx-auto block my-4 text-center text-base_color1 h-fit bg-teal-600 hover:bg-teal-500">
+            <Button on:click={(e) =>{
+                e.stopPropagation()
+                dispatch("showAddBoardForm",true)
+            }} class="font-semibold p-3 rounded-e mx-auto block my-4 text-center text-base_color1 h-fit bg-teal-600 hover:bg-teal-500">
                 <span>+ Create New Board</span>
             </Button>
         </div>

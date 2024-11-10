@@ -109,7 +109,7 @@
 {#if showAddTaskForm}
     <Modal>
         <form  method="POST" action="?/addTask"  on:submit|preventDefault={handleSubmit} class="px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-600/90 lg:w-[25em] lg:h-[27em]">
-            <Button type="button" on:click={() => dispatch("closeAddTaskForm",false)} class="bg-transparent absolute text-white text-xl top-4 right-3 hover:bg-transparent">
+            <Button type="button" on:click={() => dispatch("closeAddTaskForm",false)} class="bg-transparent absolute dark:text-base_color1 text-base_color2 text-xl top-4 right-3 hover:bg-transparent">
                 <Icon icon="fa:close" />
             </Button>
             
@@ -140,7 +140,7 @@
                 {#each subTasksEg as val, index (index)}
                     <div class="flex w-full items-center justify-between gap-3 my-3">
                         <Input type="text" name="subtask-{index}" id="subtask-{index}" placeholder={val} class="flex-grow" />
-                        <button class="flex items-center justify-center p-1" on:click={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
+                        <button class="flex items-center justify-center p-1" on:click|stopPropagation={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
                             <Icon icon="lsicon:close-small-outline" class="text-lg" />
                             <span class="sr-only">Remove Subtask</span>
                         </button>
@@ -157,7 +157,7 @@
         
             <div class="flex w-full max-w-sm flex-col my-6">
                 <Label for="status" class="font-medium">Status</Label>
-                <select id="status" name="status" class="p-2 rounded mt-2">
+                <select id="status" name="status" class="p-2 rounded mt-2 font-manrope">
                     {#each board_columns as column, i (i)}
                         <option value={column.position} class="font-manrope font-medium text-sm">{column.name}</option>
                     {/each}

@@ -19,7 +19,7 @@
   </script>
   
 <div
-    class="snackbar fixed bottom-4 z-50 right-4 bg-emerald-800 text-white py-3 px-5 rounded-lg shadow-lg animate-snackbar transition duration-500 transform"
+    class="snackbar fixed bottom-4 z-[60] right-4 bg-emerald-800 text-white py-3 px-5 rounded-lg shadow-lg animate-snackbar transition duration-500 transform"
     class:invisible={!$snackbarStore.show}>
 
     <div class="flex items-center gap-3">
