@@ -85,7 +85,7 @@
 
 
     $: {
-        console.log($windowWidth.isMobile)
+        console.log(showMobileBox)
     }
     
 
@@ -134,103 +134,110 @@
             {/if}
         </header> 
         <div class="min-h-screen lg:h-screen lg:min-h-[unset] lg:overflow-y-hidden pb-4">
-            <div class="px-4 pb-5 pt-5 lg:py-0 lg:px-0 lg:bg-white dark:bg-teal-950 lg:ps-10">
-                <h1 class="sr-only">Task Manager Dashboard</h1>
-                {#if !data.error && boardDataToDisplay?.id && boardDataToDisplay.name}
-                    <div class="flex justify-between items-center py-2 z-10 border-b px-4 lg:py-10 lg:ps-0 lg:pe-10">
-                        <div class="flex gap-1 items-center w-[75%]">
-                            <h2 
-                                class="font-semibold text-2xl max-w-full block text-ellipsis capitalize font-quicksand text-slate-900 dark:text-slate-100 overflow-hidden whitespace-nowrap"
-                            >
-                                <button on:click|stopPropagation={() => showMobileBox = true} class="w-full text-left">
-                                {boardDataToDisplay?.name}
-                                </button>
-                            </h2>
-                        
-                            <Icon icon="basil:caret-down-solid" aria-hidden="true" class="text-emerald-500 text-2xl" />
-                        </div>
-                        
-                        
-                        <div class="flex gap-6">            
-                            <Button on:click={() => showAddTaskForm = true} class="text-center open-add-task-btn w-fit text-xl rounded-lg p-3 text-base_color1 bg-light_emerald hover:border hover:border-teal-600 hover:bg-transparent hover:text-light_emerald">
-                                <Icon icon="ooui:add" />
-                                <span class="hidden">Add New Task</span>
-                            </Button>
+            <h1 class="sr-only">Task Manager Dashboard</h1>
             
-                            <BoardActionDropdownMenu boardID={boardDataToDisplay?.id || ""} on:openEditBoardForm={(e) => showEditBoardForm = e.detail} />
+            
+            {#if !data.error && boardDataToDisplay?.id && boardDataToDisplay.name}
+                <div class="px-4 pb-5 pt-5 lg:py-0 lg:px-0 lg:bg-white dark:bg-teal-950 lg:ps-10">
+                        <div class="flex justify-between items-center py-2 z-10 border-b px-4 lg:py-10 lg:ps-0 lg:pe-10">
+                            <div class="flex gap-1 items-center w-[75%]">
+                                <h2 
+                                    class="font-semibold text-2xl max-w-full block text-ellipsis capitalize font-quicksand text-slate-900 dark:text-slate-100 overflow-hidden whitespace-nowrap"
+                                >
+                                    <button on:click|stopPropagation={() => showMobileBox = true} class="w-full text-left">
+                                    {boardDataToDisplay?.name}
+                                    </button>
+                                </h2>
+                            
+                                <Icon icon="basil:caret-down-solid" aria-hidden="true" class="text-emerald-500 text-2xl" />
+                            </div>
+                            
+                            
+                            <div class="flex gap-6">            
+                                <Button on:click={() => showAddTaskForm = true} class="text-center open-add-task-btn w-fit text-xl rounded-lg p-3 text-base_color1 bg-light_emerald hover:border hover:border-teal-600 hover:bg-transparent hover:text-light_emerald">
+                                    <Icon icon="ooui:add" />
+                                    <span class="hidden">Add New Task</span>
+                                </Button>
+                
+                                <BoardActionDropdownMenu boardID={boardDataToDisplay?.id || ""} on:openEditBoardForm={(e) => showEditBoardForm = e.detail} />
+                            </div>
                         </div>
                     </div>
-                    {:else if !data.error && boardDataToDisplay}
-                    <div class="border-y p-4">
-                        <button on:click={() => showAddTaskForm = true} class="flex items-center gap-1 font-semibold underline">
-                            <Icon icon="ooui:add" />
-                            <span class="">Add New Task</span>
-                        </button>
+                    {:else if !data.error}
+                    <div class="p-4">
+                        <Button on:click={() => showMobileBox = true} class="flex open-mobilebox-btn items-center gap-1 font-semibold bg-teal-800 dark:text-base_color1 lg:hidden dark:hover:text-base_color2">
+                            <span class="">Open Menu</span>
+                        </Button>
                     </div>
                 {/if}
-            </div>
+            
+
             
             <div class="md:px-3">
-                <div class="horizontal-scroll-grid lg:h-screen lg:overflow-y-auto">
-                    {#if $authStateStore.authenticated}
-            
-                        {#if boardDataToDisplay && !data.error}
-                        {#each boardDataToDisplay.board_columns as column, i (i)}
-                            <div class="px-4 py-7">
-                                <h2 class="text-sm font-semibold uppercase tracking-wide relative flex  items-center gap-2 justify-start">
-                                    <span 
-                                        aria-hidden="true"
-                                        class="w-4 aspect-square rounded-full block" 
-                                        style="background-color: {assignColorsToColumns(boardDataToDisplay.board_columns, column.id)}">
-                                    </span>
-                                    <span>{column.name} ({boardDataToDisplay.tasks.filter(task => task.position === column.position).length})</span>
-                                </h2>
-                                <div class="grid grid-cols-1 gap-10 mt-7">
-                                    {#each boardDataToDisplay.tasks as task, i (i)}
-                                        {#if task.position === column.position}
-                                            <button on:click={() => {
-                                                taskBeingViewed = task;
-                                                showTaskViewModal = true;
-                                            }} class="drop-shadow-xl bg-white dark:bg-[#2b2c37d3] font-quicksand text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center">
-                                                <h3 class="font-semibold">{task.title}</h3>
-        
-                                                {#if task.sub_tasks?.length}
-                                                    <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)} of {task.sub_tasks.length} subtasks</p>
-                                                {:else}
-                                                    <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">No subtasks</p>
-                                                {/if}
-                                            </button>
-                                        {/if}
-        
-                                    {/each}
-                                </div>
-                                {#if  !boardDataToDisplay.tasks.find(v => v.position === column.position) }
-                                    <button aria-hidden="true" class="bg-blue-100/60 dark:bg-[#2b2c3765] w-full text-left h-1/2 rounded-md p-4 flex flex-col justify-center">
-                                    </button>
-                                {/if}
-                            </div>
-                        {/each}
-                        <div class="w-full rounded-lg overflow-hidden me-4 mt-16">
-                            <button on:click={() => showEditBoardForm = true} class="w-full block h-2/3 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
-                                + New Column
-                            </button>
-                        </div>
-                        {/if}
+                {#if $authStateStore.authenticated}
+                {#if data.boards?.length && !data.error}
                 
-                        {:else}
-                        <div class="flex justify-center flex-col items-center mt-20">
-                            <h2 role="alert" class="text-2xl font-quicksand underline font-semibold text-slate-400 text-center">
-                                Please Log In
-                            </h2>
-        
-                            <AuthPanel formAction="?/login" />
+                        <!-- Grid Container -->
+                        <div class="horizontal-scroll-grid lg:h-screen lg:overflow-y-auto">
+                
+                            {#if boardDataToDisplay && !data.error}
+                            {#each boardDataToDisplay.board_columns as column, i (i)}
+                                <div class="px-4 py-7">
+                                    <h2 class="text-sm font-semibold uppercase tracking-wide relative flex  items-center gap-2 justify-start">
+                                        <span 
+                                            aria-hidden="true"
+                                            class="w-4 aspect-square rounded-full block" 
+                                            style="background-color: {assignColorsToColumns(boardDataToDisplay.board_columns, column.id)}">
+                                        </span>
+                                        <span>{column.name} ({boardDataToDisplay.tasks.filter(task => task.position === column.position).length})</span>
+                                    </h2>
+                                    <div class="grid grid-cols-1 gap-10 mt-7">
+                                        {#each boardDataToDisplay.tasks as task, i (i)}
+                                            {#if task.position === column.position}
+                                                <button on:click={() => {
+                                                    taskBeingViewed = task;
+                                                    showTaskViewModal = true;
+                                                }} class="drop-shadow-xl bg-white dark:bg-[#2b2c37d3] font-quicksand text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center">
+                                                    <h3 class="font-semibold">{task.title}</h3>
+            
+                                                    {#if task.sub_tasks?.length}
+                                                        <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)} of {task.sub_tasks.length} subtasks</p>
+                                                    {:else}
+                                                        <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">No subtasks</p>
+                                                    {/if}
+                                                </button>
+                                            {/if}
+            
+                                        {/each}
+                                    </div>
+                                    {#if  !boardDataToDisplay.tasks.find(v => v.position === column.position) }
+                                        <button aria-hidden="true" class="bg-blue-100/60 dark:bg-[#2b2c3765] w-full text-left h-[20em] lg:h-1/2 rounded-md p-4 flex flex-col justify-center">
+                                        </button>
+                                    {/if}
+                                </div>
+                            {/each}
+                            <div class="w-full rounded-lg overflow-hidden me-4 mt-16 h-[20em] lg:h-1/2">
+                                <button on:click={() => showEditBoardForm = true} class="w-full h-full block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
+                                    + New Column
+                                </button>
+                            </div>
+                            {/if}
                         </div>
+                        <!-- Grid Container -->
                     {/if}
-                </div>
+                    {:else}
+                    <div class="flex justify-center flex-col mt-20 lg:h-screen lg:mt-0 items-center">
+                        <h2 role="alert" class="text-2xl font-quicksand underline font-semibold text-slate-900 dark:text-slate-400 text-center md:text-3xl">
+                            Please Log In
+                        </h2>
+    
+                        <AuthPanel formAction="?/login" />
+                    </div>
+                {/if}
         
                 {#if data.error && $authStateStore.authenticated}
-                    <div class="flex flex-col justify-center items-center my-20">
-                        <p role="alert" class="font-medium text-center font-quicksand flex items-center justify-center gap-2">
+                    <div class="flex flex-col justify-center items-center mt-20 lg:h-screen lg:mt-0">
+                        <p role="alert" class="font-medium text-center font-quicksand flex items-center justify-center gap-2 md:text-lg">
                             <Icon icon="fluent:cloud-error-20-regular" class="text-4xl text-red-500" />
                             <span>Failed To Fetch Boards Data</span>
                         </p>
@@ -240,10 +247,13 @@
             
             
                 {#if $authStateStore.authenticated && data.boards?.length === 0 && !data.error}
-                    <p role="alert" class="font-medium text-center font-quicksand my-20 flex items-center justify-center gap-2">
-                        <Icon icon="tdesign:task-visible" class="text-light_emerald text-4xl" />
-                        <span>You have no created boards</span>
-                    </p>              
+                    <div class="flex flex-col justify-center items-center mt-20 lg:h-screen lg:mt-0">
+                        <p role="alert" class="font-medium text-center font-quicksand my-20 flex items-center justify-center gap-2 md:text-lg">
+                            <Icon icon="tdesign:task-visible" class="text-light_emerald text-4xl" />
+                            <span>You have no created boards</span>
+                        </p>              
+                    </div>   
+                    
                 {/if}
             </div>
             
@@ -266,7 +276,7 @@
 
 
     {#if !showMobileBox}
-        <button id="mobile-box-btn" aria-controls="mobile-box" aria-expanded="{showMobileBox ? "true" : "false"}" on:click={() => showMobileBox = true} class="text-5xl hidden lg:flex bg-teal-800 drop-shadow-lg shadow-md rounded-e-full p-3 pe-1 justify-center absolute items-center aspect-square w-10 left-0 bottom-20 text-gray-100 z-10 hover:bg-teal-600">
+        <button id="mobile-box-btn" aria-controls="mobile-box" aria-expanded="{showMobileBox ? "true" : "false"}" on:click={() => showMobileBox = true} class="text-5xl hidden lg:flex bg-teal-800 drop-shadow-lg shadow-md rounded-e-full p-3 pe-1 justify-center absolute items-center aspect-square max-w-10 w-10 left-0 bottom-20 text-gray-100 z-10 hover:bg-teal-600">
             <Icon icon="mdi:arrow-collapse-left" />
             <span class="sr-only">Show Sidebar</span>
         </button>
