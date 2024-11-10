@@ -57,7 +57,7 @@
                 mssg: "Task Updated Successfully"
             })
             
-            await invalidateAll()
+            await  invalidateAll()
             dispatch("closeTaskViewModal",false)
         }
         catch(err: any | unknown){
@@ -98,7 +98,7 @@
                 loading: false, show: true, mssg: "Task Deleted Successfully"
             }))
 
-            await invalidateAll();
+            await  invalidateAll()
             dispatch("closeTaskViewModal", false)
         } catch (err: any) {
             alertStore.set({
@@ -126,7 +126,7 @@
 {#if showTaskViewModal}
     <Modal>
 
-            <form  method="POST" action="?/updateTask"  on:submit|preventDefault={handleSubmit} class="p-6 pt-3 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80 lg:w-[25em] lg:h-[27em]">
+            <form  method="POST" action="?/updateTask"  on:submit|preventDefault={handleSubmit} class="p-6 pt-3 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-800/60 md:w-[25em] md:h-[27em]">
                 <div class="flex flex-row-reverse justify-between items-center">
                     <TaskActionDropdown on:delete={handleDeleteTask} />
                     <Button type="button" on:click={handleClose} class="bg-transparent text-white text-xl hover:bg-transparent">

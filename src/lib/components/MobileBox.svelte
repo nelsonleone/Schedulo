@@ -23,7 +23,7 @@
 
 
 
-<div id="mobile-box" aria-controls="mobile-box-btn" class="fixed max-w-[90%] w-[27em] h-[26em] mobile-box overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] text-slate-800 dark:text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-sm dark:drop-shadow-lg dark:shadow-gray-500/60 lg:left-0 lg:mx-0 lg:top-0 lg:pt-40 mb-32 lg:h-screen lg:max-w-full lg:pe-10 lg:w-full lg:absolute">
+<div id="mobile-box" aria-controls="mobile-box-btn" class="fixed max-w-[90%] w-[27em] h-[26em] mobile-box overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#20212c] text-slate-800 dark:text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-sm dark:drop-shadow-lg dark:shadow-gray-500/60 lg:left-0 lg:mx-0 lg:top-0 lg:pt-40 mb-32 lg:h-screen lg:max-w-full lg:pe-10 lg:w-full lg:absolute">
     <Logo logoType={$mode === "dark" ? "wht" : "blk"} styles="hidden" />
 
     {#if $authStateStore.authenticated}

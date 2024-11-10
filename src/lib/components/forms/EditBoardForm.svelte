@@ -96,7 +96,7 @@
 
 {#if showEditBoardForm}
     <Modal>
-        <form  method="POST" action="?/editBoard"  on:submit|preventDefault={handleSubmit} class="edit-board-form px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-600/90 lg:w-[25em] lg:h-[27em]">
+        <form  method="POST" action="?/editBoard"  on:submit|preventDefault={handleSubmit} class="edit-board-form px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-800/60 md:w-[25em] md:h-[27em]">
             
             <h2 class="text-xl font-semibold font-quicksand mb-6">Edit Board</h2>
             

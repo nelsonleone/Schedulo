@@ -119,7 +119,7 @@
     </div>
 
     <div class="{showMobileBox ? 'lg:w-[76%] xl:w-[78%]' : 'w-full'} bg-[#f4f7fde9] dark:bg-[#20212c]">
-        <header class="border-b border-b-gray-400 p-4 bg-teal-950 w-full h-20 flex items-center lg:h-32 lg:hidden">
+        <header class="border-b border-b-gray-400 p-4 bg-teal-950 w-full h-20 flex items-center md:h-32 lg:hidden">
             {#if themeMode === "light" && !$windowWidth.isMobile}
                 <Logo styles="w-40 lg:w-52 block" logoType="blk" />
 
@@ -137,7 +137,7 @@
             <div class="px-4 pb-5 pt-5 lg:py-0 lg:px-0 lg:bg-white dark:bg-teal-950 lg:ps-10">
                 <h1 class="sr-only">Task Manager Dashboard</h1>
                 {#if !data.error && boardDataToDisplay?.id && boardDataToDisplay.name}
-                    <div class="flex justify-between items-center pb-5 z-10 border-b px-4 lg:py-10 lg:ps-0 lg:pe-10">
+                    <div class="flex justify-between items-center py-2 z-10 border-b px-4 lg:py-10 lg:ps-0 lg:pe-10">
                         <div class="flex gap-1 items-center w-[75%]">
                             <h2 
                                 class="font-semibold text-2xl max-w-full block text-ellipsis capitalize font-quicksand text-slate-900 dark:text-slate-100 overflow-hidden whitespace-nowrap"
@@ -176,7 +176,7 @@
             
                         {#if boardDataToDisplay && !data.error}
                         {#each boardDataToDisplay.board_columns as column, i (i)}
-                            <div class="px-4 lg:py-7">
+                            <div class="px-4 py-7">
                                 <h2 class="text-sm font-semibold uppercase tracking-wide relative flex  items-center gap-2 justify-start">
                                     <span 
                                         aria-hidden="true"
@@ -210,8 +210,8 @@
                                 {/if}
                             </div>
                         {/each}
-                        <div class="w-full rounded-lg overflow-hidden me-4">
-                            <button on:click={() => showEditBoardForm = true} class="w-full block h-2/3 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand md:mt-20">
+                        <div class="w-full rounded-lg overflow-hidden me-4 mt-16">
+                            <button on:click={() => showEditBoardForm = true} class="w-full block h-2/3 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
                                 + New Column
                             </button>
                         </div>
