@@ -65,6 +65,7 @@ const config: Config = {
 			animation: {
 				snackbar: 'slideInUp 0.5s ease-out forwards',
 				progress: 'progressBar 3s linear infinite',
+				mobileBox: 'slideOutLeft .2s ease-in-out forwards'
 			  },
 			keyframes: {
 				slideInUp: {
@@ -74,7 +75,19 @@ const config: Config = {
 				progressBar: {
 				  '0%': { width: '0%' },
 				  '100%': { width: '100%' },
+				},
+				slideOutLeft: {
+					'0%': { transform: 'translateX(0)', opacity: '1', width: '100%' },
+					'20%': { transform: 'translateX(-20%)', opacity: '.8', width: '20%' }, 
+					'40%': { transform: 'translateX(-40%)', opacity: '.6', width: '40%' }, 
+					'60%': { transform: 'translateX(-60%)', opacity: '.4', width: '60%' }, 
+					'80%': { transform: 'translateX(-80%)', opacity: '.2', width: '80%' }, 
+					'100%': { transform: 'translateX(-100%)', opacity: '0', width: '0%' },
 				}
+			},
+			backgroundImage: {
+				'add-column-light': 'linear-gradient(rgb(233, 239, 250), rgba(233, 239, 250, 0.5))',
+				'add-column-dark': 'linear-gradient(#2b2c37, #1b1c22)',
 			}
 		}
 	},

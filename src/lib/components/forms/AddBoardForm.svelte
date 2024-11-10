@@ -97,7 +97,7 @@
 
 {#if showAddBoardForm}
     <Modal>
-        <form  method="POST" action="?/createBoard"  on:submit|preventDefault={handleSubmit} class="add-board-form px-6 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80">
+        <form  method="POST" action="?/createBoard"  on:submit|preventDefault={handleSubmit} class="add-board-form px-6 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-md shadow-gray-600/80  lg:w-[25em] lg:h-[27em]">
             <h2 class="text-xl font-semibold font-quicksand mb-6">Add New Board</h2>
             
             <div class="flex w-full max-w-sm flex-col my-6">
@@ -131,7 +131,7 @@
         
             <div class="flex flex-col gap-3 mt-5">
                 <Button type="button" on:click={() => numOfColumns = [...numOfColumns,""]} class="text-base font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add Column</Button>
-                <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Create Board</LoadingBtn>
+                <LoadingBtn type="submit" styles="text-base drop-shadow-md  font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Create Board</LoadingBtn>
             </div>
         </form>
     </Modal>

@@ -23,7 +23,7 @@
 
 
 
-<div class="{showMobileBox ? "block" : "hidden"} fixed max-w-[90%] w-[27em] h-[26em] mobile-box z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-md drop-shadow-lg shadow-gray-500/60 md:left-0 md:mx-0 md:top-0 md:pt-40 mb-32 md:h-screen md:max-w-full md:w-full md:absolute">
+<div id="mobile-box" aria-controls="mobile-box-btn" class="fixed max-w-[90%] w-[27em] h-[26em] mobile-box overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] text-slate-800 dark:text-slate-300 rounded-md pb-6 pt-10 pe-6 shadow-sm dark:drop-shadow-lg dark:shadow-gray-500/60 lg:left-0 lg:mx-0 lg:top-0 lg:pt-40 mb-32 lg:h-screen lg:max-w-full lg:pe-10 lg:w-full lg:absolute">
     <Logo logoType={$mode === "dark" ? "wht" : "blk"} styles="hidden" />
 
     {#if $authStateStore.authenticated}
@@ -34,7 +34,7 @@
             <button on:click={(e) => {
                 dispatch("setBoardToDisplay",board)
                 dispatch("closeMobileBox",false)
-            }} class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
+            }} class="flex font-semibold gap-4 items-center p-3 my-2 w-full rounded-e text-white bg-teal-800 hover:bg-slate-200 hover:text-teal-800 transition ease-in-out duration-200">
                 <Icon icon="tabler:table-column" class="text-2xl" />
                 <span>{board.name}</span>
             </button>
@@ -46,7 +46,7 @@
     {/if}
 
     <ColorSwitcher />
-    <Button class="hidden">
-        <Icon icon="ri:collapse-diagonal-line" />
-    </Button>
+    <button id="mobile-box-btn" aria-controls="mobile-box" aria-expanded="{showMobileBox ? "true" : "false"}" on:click={() => dispatch("closeMobileBox",false)} class="text-5xl hidden lg:flex bg-teal-800 drop-shadow-lg shadow-md rounded-s-full p-3 pe-1 justify-center absolute items-center aspect-square w-10 my-auto right-0 top-40 bottom-0 text-gray-100 z-10 hover:bg-teal-600">
+        <Icon icon="mdi:arrow-collapse-left" />
+    </button>
 </div>

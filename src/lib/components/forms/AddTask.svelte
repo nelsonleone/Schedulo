@@ -108,7 +108,7 @@
 
 {#if showAddTaskForm}
     <Modal>
-        <form  method="POST" action="?/addTask"  on:submit|preventDefault={handleSubmit} class="px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-600/90 md:w-[25em] md:h-[27em]">
+        <form  method="POST" action="?/addTask"  on:submit|preventDefault={handleSubmit} class="px-6 pt-10 fixed w-11/12 h-[24em] z-10 fade-up overflow-y-auto mx-auto left-0 right-0 top-24 bg-white dark:bg-[#101321] rounded-md py-6 shadow-lg drop-shadow-lg shadow-gray-600/90 lg:w-[25em] lg:h-[27em]">
             <Button type="button" on:click={() => dispatch("closeAddTaskForm",false)} class="bg-transparent absolute text-white text-xl top-4 right-3 hover:bg-transparent">
                 <Icon icon="fa:close" />
             </Button>
@@ -146,7 +146,7 @@
                         </button>
                     </div>        
                 {/each}
-                <Button type="button" on:click={() => subTasksEg = [...subTasksEg,""]} class="text-base mx-auto mt-2 block font-manrope bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add New Subtask</Button>
+                <Button type="button" on:click={() => subTasksEg = [...subTasksEg,""]} class="text-base mx-auto mt-2 block font-manrope bg-gray-100  drop-shadow-lg dark:bg-gray-200 text-light_emerald font-semibold hover:bg-gray-200/90">+ Add New Subtask</Button>
         
                 {#if errors.subtasks?.length}
                     <ErrorPara>
@@ -174,7 +174,7 @@
             </div>
         
             <div class="flex flex-col gap-3 mt-5">
-                <LoadingBtn type="submit" styles="text-base font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Add Task</LoadingBtn>
+                <LoadingBtn type="submit" styles="text-base drop-shadow-md font-manrope bg-light_emerald text-base_color1 font-semibold hover:bg-light_emerald/70" isLoading={isCreatingBoard}>Add Task</LoadingBtn>
             </div>
         </form>
     </Modal>
