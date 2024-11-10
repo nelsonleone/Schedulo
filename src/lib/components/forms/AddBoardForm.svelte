@@ -115,7 +115,7 @@
                 {#each numOfColumns as col, index (index)}
                 <div class="flex w-full items-center justify-between gap-3 my-3">
                     <Input type="text" name="column-{index}" id="column-{index}" placeholder={col} class="flex-grow" />
-                    <button class="flex items-center justify-center p-1" on:click|stopPropagation={() => numOfColumns = numOfColumns.filter((v,i) => i !== index)}>
+                    <button type="button" class="flex items-center justify-center p-1" on:click|stopPropagation={() => numOfColumns = numOfColumns.filter((v,i) => i !== index)}>
                         <Icon icon="lsicon:close-small-outline" class="text-lg" />
                         <span class="sr-only">Remove Column</span>
                     </button>

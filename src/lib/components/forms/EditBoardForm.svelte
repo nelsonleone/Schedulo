@@ -123,7 +123,7 @@
                         placeholder={col.name} 
                         class="flex-grow" 
                     />
-                    <button class="flex items-center justify-center p-1" on:click|stopPropagation={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
+                    <button type="button" class="flex items-center justify-center p-1" on:click|stopPropagation={() => edittedBoardColumns = edittedBoardColumns.filter((v,i) => i !== index)}>
                         <Icon icon="lsicon:close-small-outline" class="text-lg" />
                         <span class="sr-only">Remove Column</span>
                     </button>

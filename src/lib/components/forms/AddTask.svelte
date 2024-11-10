@@ -140,7 +140,7 @@
                 {#each subTasksEg as val, index (index)}
                     <div class="flex w-full items-center justify-between gap-3 my-3">
                         <Input type="text" name="subtask-{index}" id="subtask-{index}" placeholder={val} class="flex-grow" />
-                        <button class="flex items-center justify-center p-1" on:click|stopPropagation={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
+                        <button type="button" class="flex items-center justify-center p-1" on:click|stopPropagation={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
                             <Icon icon="lsicon:close-small-outline" class="text-lg" />
                             <span class="sr-only">Remove Subtask</span>
                         </button>
