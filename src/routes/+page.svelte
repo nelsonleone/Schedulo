@@ -101,32 +101,12 @@
 
 <main class="lg:flex">
     <div class="z-10 {!showMobileBox && !$windowWidth.isMobile ? "lg:animate-mobileBox" : showMobileBox && $windowWidth.isMobile  ? "block" : !showMobileBox && $windowWidth.isMobile ? "hidden" : ""} fade-up lg:w-[24%] xl:w-[22%] relative">
-        <div class="p-10 z-20 relative hidden lg:block">
-            {#if themeMode === "light" && !$windowWidth.isMobile}
-                <Logo styles="w-40 md:w-52 block" logoType="blk" />
-
-                {:else if themeMode === "dark" && !$windowWidth.isMobile}
-                <Logo styles="w-40 md:w-52 block" logoType="wht" />
-
-                {:else if themeMode === "light" && $windowWidth.isMobile}
-                <Logo styles="w-40 md:w-52 block" logoType="wht" />
-
-                {:else if themeMode === "dark" && $windowWidth.isMobile}
-                <Logo styles="w-40 md:w-52 block" logoType="wht" />
-            {/if}
-        </div>
-        <MobileBox {showMobileBox} on:closeMobileBox={(e) => showMobileBox = e.detail} on:setBoardToDisplay={((e) => boardDataToDisplay = e.detail)} on:showAddBoardForm={(e) => showAddBoardForm = e.detail} />
+        <MobileBox {themeMode} {showMobileBox} on:closeMobileBox={(e) => showMobileBox = e.detail} on:setBoardToDisplay={((e) => boardDataToDisplay = e.detail)} on:showAddBoardForm={(e) => showAddBoardForm = e.detail} />
     </div>
 
     <div class="{showMobileBox ? 'lg:w-[76%] xl:w-[78%]' : 'w-full'} bg-[#f4f7fde9] dark:bg-[#20212c]">
         <header class="border-b border-b-gray-400 p-4 bg-teal-950 w-full h-20 flex items-center md:h-32 lg:hidden">
-            {#if themeMode === "light" && !$windowWidth.isMobile}
-                <Logo styles="w-40 lg:w-52 block" logoType="blk" />
-
-                {:else if themeMode === "dark" && !$windowWidth.isMobile}
-                <Logo styles="w-40 lg:w-52 block" logoType="wht" />
-
-                {:else if themeMode === "light" && $windowWidth.isMobile}
+            {#if themeMode === "light" && $windowWidth.isMobile}
                 <Logo styles="w-40 lg:w-52 block" logoType="wht" />
 
                 {:else if themeMode === "dark" && $windowWidth.isMobile}
@@ -175,7 +155,7 @@
             
             <div class="md:px-3">
                 {#if $authStateStore.authenticated}
-                {#if data.boards?.length && !data.error}
+                    {#if data.boards?.length && !data.error}
                 
                         <!-- Grid Container -->
                         <div class="horizontal-scroll-grid lg:h-screen lg:overflow-y-auto">
@@ -225,7 +205,9 @@
                         </div>
                         <!-- Grid Container -->
                     {/if}
+
                     {:else}
+
                     <div class="flex justify-center flex-col mt-20 lg:h-screen lg:mt-0 items-center">
                         <h2 role="alert" class="text-2xl font-quicksand underline font-semibold text-slate-900 dark:text-slate-400 text-center md:text-3xl">
                             Please Log In
@@ -275,10 +257,14 @@
     </div>
 
 
-    {#if !showMobileBox}
-        <button id="mobile-box-btn" aria-controls="mobile-box" aria-expanded="{showMobileBox ? "true" : "false"}" on:click={() => showMobileBox = true} class="text-5xl hidden lg:flex bg-teal-800 drop-shadow-lg shadow-md rounded-e-full p-3 pe-1 justify-center absolute items-center aspect-square max-w-10 w-10 left-0 bottom-20 text-gray-100 z-10 hover:bg-teal-600">
-            <Icon icon="mdi:arrow-collapse-left" />
-            <span class="sr-only">Show Sidebar</span>
-        </button>
-    {/if}
 </main>
+{#if !showMobileBox}
+    <button id="mobile-box-btn" 
+        aria-controls="mobile-box" 
+        aria-expanded="{showMobileBox ? 'true' : 'false'}" 
+        on:click={() => showMobileBox = true} 
+        class="text-5xl hidden lg:flex bg-teal-800 fixed drop-shadow-lg shadow-md rounded-e-full p-3 pe-1 justify-center items-center aspect-square max-w-[40px] w-10 h-10 left-0 bottom-32 text-gray-100 z-10 hover:bg-teal-600 overflow-hidden">
+        <Icon icon="mdi:arrow-collapse-left" />
+        <span class="sr-only">Show Sidebar</span>
+    </button>
+{/if}

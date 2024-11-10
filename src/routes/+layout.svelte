@@ -6,13 +6,12 @@
 	import { authStateStore } from '$lib/store';
 	import Snackbar from '$lib/components/layout-components/Snackbar.svelte';
 	import Alert from '$lib/components/layout-components/Alert.svelte';
-	import AddBoardForm from '$lib/components/forms/AddBoardForm.svelte';
 
 	export let data;
-	$: ({ session, supabase, authenticated } = data)
+	$: ({ session, supabase, authenticated, user } = data)
 
 	$: {
-	   authStateStore.set({ authenticated })
+	   authStateStore.set({ authenticated, userDetails: user })
 	}
 
 	onMount(() => {
@@ -20,6 +19,7 @@
 			console.log("Logged")
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth')
+
 			}
 		})
 

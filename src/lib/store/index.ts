@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
 import { writable } from "svelte/store";
 import type { AlertSeverity } from "../../enums";
+import type { User } from "@supabase/supabase-js";
 
 interface SnackbarProps {
     show: boolean,
@@ -22,8 +23,9 @@ export const mobileNavMode = writable<{ show: boolean }>({
     show: browser && window.innerWidth < 1024 ? false : true
 })
 
-export const authStateStore = writable<{ authenticated: boolean | null }>({
-    authenticated: null
+export const authStateStore = writable<{ authenticated: boolean | null, userDetails: User | null }>({
+    authenticated: null,
+    userDetails: null
 })
 
 export const snackbarStore = writable<SnackbarProps>({
