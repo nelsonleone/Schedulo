@@ -85,7 +85,9 @@
 
 
     $: {
-        console.log(showMobileBox)
+       if (!$authStateStore.authenticated){
+          showMobileBox = false;
+       }
     }
     
 
@@ -129,7 +131,7 @@
                                     </button>
                                 </h2>
                             
-                                <Icon icon="basil:caret-down-solid" aria-hidden="true" class="text-emerald-500 text-2xl" />
+                                <Icon icon="basil:caret-down-solid" aria-hidden="true" class="text-emerald-500 text-2xl lg:rotate-90" />
                             </div>
                             
                             
@@ -196,7 +198,7 @@
                                     {/if}
                                 </div>
                             {/each}
-                            <div class="w-full rounded-lg overflow-hidden me-4 mt-16 h-[20em] lg:h-1/2">
+                            <div class="w-full rounded-lg overflow-hidden mx-4 mt-16 lg:h-1/2">
                                 <button on:click={() => showEditBoardForm = true} class="w-full h-full block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
                                     + New Column
                                 </button>
@@ -258,7 +260,7 @@
 
 
 </main>
-{#if !showMobileBox}
+{#if !showMobileBox && $authStateStore.authenticated}
     <button id="mobile-box-btn" 
         aria-controls="mobile-box" 
         aria-expanded="{showMobileBox ? 'true' : 'false'}" 

@@ -102,12 +102,14 @@
     grid-auto-flow: column;
     grid-gap: 12px;
     overflow-x: auto;
- }
-
+  }
+  
   .horizontal-scroll-grid div {
     width: 100%;
     height: auto;
+    min-height: 20em;
   }
+  
 
   @screen md {
     .horizontal-scroll-grid {

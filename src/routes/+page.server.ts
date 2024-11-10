@@ -314,5 +314,25 @@ export const actions = {
     
             return error(500, { message: errMssg })
         }
-    }    
+    },
+    
+    
+
+
+
+    logout: async ({ locals: { supabase } }: RequestEvent) => {
+        try {
+            
+            const { error  } = await supabase.auth.signOut()
+
+            if (error){
+                throw new Error(error.message)
+            }
+
+            return { success: true, message: "Logout Successfully" }
+        } catch (err: any) {
+    
+            return error(500, { message: err.message })
+        }
+    }
 }
