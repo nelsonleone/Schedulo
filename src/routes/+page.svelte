@@ -17,6 +17,7 @@
 	import TaskViewAndUpdateForm from "$lib/components/forms/TaskViewAndUpdateForm.svelte";
 	import EditBoardForm from "$lib/components/forms/EditBoardForm.svelte";
 	import MobileBox from "$lib/components/MobileBox.svelte";
+	import { checkDueDate } from "$lib/helperFns/checkDueDate.js";
 
 
     export let form;
@@ -160,7 +161,7 @@
                     {#if data.boards?.length && !data.error}
                 
                         <!-- Grid Container -->
-                        <div class="horizontal-scroll-grid lg:h-screen lg:overflow-y-auto">
+                        <div class="horizontal-scroll-grid h-screen lg:overflow-y-auto">
                 
                             {#if boardDataToDisplay && !data.error}
                             {#each boardDataToDisplay.board_columns as column, i (i)}
@@ -176,30 +177,58 @@
                                     <div class="grid grid-cols-1 gap-10 mt-7">
                                         {#each boardDataToDisplay.tasks as task, i (i)}
                                             {#if task.position === column.position}
-                                                <button on:click={() => {
-                                                    taskBeingViewed = task;
-                                                    showTaskViewModal = true;
-                                                }} class="drop-shadow-xl bg-white dark:bg-[#2b2c37d3] font-quicksand text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center">
+                                                <button 
+                                                    on:click={() => {
+                                                        taskBeingViewed = task;
+                                                        showTaskViewModal = true;
+                                                    }} 
+                                                    class="relative drop-shadow-xl bg-white dark:bg-[#2b2c37d3] font-quicksand text-left min-h-[5.5em] h-[5.5em] rounded-md p-4 flex flex-col justify-center"
+                                                >
+                                                    <!-- Display the icon if task is completed -->
+                                                    {#if task.is_completed}
+                                                        <Icon 
+                                                            icon="lets-icons:done-ring-round" 
+                                                            class="absolute top-1 right-1 text-emerald-500 text-lg"
+                                                        />
+                                                    {/if}
+                                                    
+                                                    <!-- Task title -->
                                                     <h3 class="font-semibold">{task.title}</h3>
-            
+                                                
+                                                    <!-- Subtask information -->
                                                     {#if task.sub_tasks?.length}
-                                                        <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">{checkNumOfCompletedSubtasks(task.sub_tasks)} of {task.sub_tasks.length} subtasks</p>
+                                                        <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">
+                                                            {checkNumOfCompletedSubtasks(task.sub_tasks)} of {task.sub_tasks.length} subtasks
+                                                        </p>
                                                     {:else}
                                                         <p class="text-slate-600 dark:text-slate-400 mt-2 font-semibold text-sm">No subtasks</p>
                                                     {/if}
-                                                </button>
+
+
+                                                    <!-- Due date information -->
+                                                    <div class="flex justify-end">
+                                                        {#if task.due_date}
+                                                            {#if checkDueDate(task.due_date).is_due && !task.is_completed}
+                                                                <span class="text-red-500 mt-3 text-xs font-semibold font-quicksand">Task is due</span>
+
+                                                                {:else if checkDueDate(task.due_date).is_due_soon}
+                                                                <span class="text-orange-500 mt-3 text-xs font-semibold font-quicksand">Task will be due soon</span>
+                                                            {/if}
+                                                        {/if}
+                                                    </div>
+                                                </button>                                        
                                             {/if}
             
                                         {/each}
                                     </div>
                                     {#if  !boardDataToDisplay.tasks.find(v => v.position === column.position) }
-                                        <button aria-hidden="true" class="bg-blue-100/60 dark:bg-[#2b2c3765] w-full text-left h-[20em] lg:h-1/2 rounded-md p-4 flex flex-col justify-center">
+                                        <button aria-hidden="true" class="bg-blue-100/60 dark:bg-[#2b2c3765] w-full text-left h-1/2 rounded-md p-4 flex flex-col justify-center">
                                         </button>
                                     {/if}
                                 </div>
                             {/each}
-                            <div class="w-full rounded-lg overflow-hidden mx-4 mt-16 lg:h-1/2">
-                                <button on:click={() => showEditBoardForm = true} class="w-full h-full block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
+                            <div class="w-full rounded-lg overflow-hidden mx-4 mt-16 h-1/2">
+                                <button on:click={() => showEditBoardForm = true} class="open-edit-board-btn w-full h-full block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
                                     + New Column
                                 </button>
                             </div>

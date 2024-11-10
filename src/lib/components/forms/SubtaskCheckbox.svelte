@@ -16,7 +16,7 @@
     <Label
      id={`subtask-${id}-label`}
      for={`subtask-${id}`}
-     class="text-sm font-medium cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+     class="text-sm font-medium cursor-pointer leading-none peer-disabled:cursor-not-allowed text-base_color1 peer-disabled:opacity-70"
     >
      {title}
     </Label>

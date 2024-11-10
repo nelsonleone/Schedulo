@@ -11,7 +11,7 @@
     
 <DropdownMenu>
     <DropdownMenuTrigger asChild let:builder>
-     <Button builders={[builder]} variant="outline" class="text-2xl w-fit p-0 text-slate-300 bg-transparent border-none hover:bg-transparent">
+     <Button builders={[builder]} variant="outline" class="text-2xl w-fit p-0 text-slate-600 dark:text-slate-300 bg-transparent border-none hover:bg-transparent">
         <Icon icon="charm:menu-kebab" />
      </Button>
     </DropdownMenuTrigger>
