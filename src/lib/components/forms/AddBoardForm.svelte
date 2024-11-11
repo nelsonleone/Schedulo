@@ -26,7 +26,7 @@
 
     const dispatch = createEventDispatcher()
 
-    const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"add-board-form",showAddBoardForm,dispatch,"closeAddBoardForm")
+    const handleOutSideClick = (e: MouseEvent) => OutsideClick(e,"add-board-form",isCreatingBoard ? false : showAddBoardForm,dispatch,"closeAddBoardForm")
 
     onMount(() => {
         window.addEventListener('click',handleOutSideClick)
