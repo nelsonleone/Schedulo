@@ -116,7 +116,7 @@
                 <Logo styles="w-40 lg:w-52 block" logoType="wht" />
             {/if}
         </header> 
-        <div class="min-h-screen h-screen lg:h-screen lg:min-h-[unset] lg:overflow-y-hidden pb-4">
+        <div class="min-h-screen lg:h-screen lg:min-h-[unset] lg:overflow-y-hidden pb-4">
             <h1 class="sr-only">Task Manager Dashboard</h1>
             
             
@@ -227,8 +227,8 @@
                                     {/if}
                                 </div>
                             {/each}
-                            <div class="w-full rounded-lg overflow-hidden mx-4 mt-16 h-1/2">
-                                <button on:click={() => showEditBoardForm = true} class="open-edit-board-btn w-full h-full block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
+                            <div class="w-full rounded-lg overflow-hidden mx-4 mt-16">
+                                <button on:click={() => showEditBoardForm = true} class="open-edit-board-btn w-full  max-h-[20em] h-[10em] block mb-7 {themeMode === "dark" ? "dark:bg-add-column-dark" : "bg-add-column-light"}  text-3xl font-semibold font-quicksand">
                                     + New Column
                                 </button>
                             </div>
