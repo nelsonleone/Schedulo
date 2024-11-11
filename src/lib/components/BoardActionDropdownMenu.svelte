@@ -5,8 +5,7 @@
 	import DropdownMenuSeparator from "./ui/dropdown-menu/dropdown-menu-separator.svelte";
 	import DropdownMenuContent from "./ui/dropdown-menu/dropdown-menu-content.svelte";
 	import DropdownMenuItem from "./ui/dropdown-menu/dropdown-menu-item.svelte";
-	import { createEventDispatcher } from "svelte";
-	import { invalidate, invalidateAll } from "$app/navigation";
+	import {invalidateAll } from "$app/navigation";
 	import { alertStore, snackbarStore } from "$lib/store";
 	import { AlertSeverity } from "../../enums";
 
@@ -39,7 +38,7 @@
                 loading: false, show: true, mssg: "Board Deleted Successfully"
             }))
 
-            await invalidate('/')
+            await invalidateAll()
         } catch (err: any) {
             alertStore.set({
                 mssg: err.message || "An error occurred",
