@@ -127,7 +127,7 @@
             
             <div class="flex w-full max-w-sm flex-col my-6">
                 <Label for="description" class="font-medium">Description (optional)</Label>
-                <Input type="text" name="description" id="description" placeholder="e.g I need to make a sketch of the structure" class="mt-3" />
+                <Input type="text" name="description" on:change={() => errors.title = null} id="description" placeholder="e.g I need to make a sketch of the structure" class="mt-3" />
                 {#if errors.description}
                     <ErrorPara>
                         {errors.description}
@@ -139,7 +139,7 @@
                 <p class="font-medium mb-2 text-sm">Substasks</p>
                 {#each subTasksEg as val, index (index)}
                     <div class="flex w-full items-center justify-between gap-3 my-3">
-                        <Input type="text" name="subtask-{index}" id="subtask-{index}" placeholder={val} class="flex-grow" />
+                        <Input type="text" on:change={() => errors.subtasks = null} name="subtask-{index}" id="subtask-{index}" placeholder={val} class="flex-grow" />
                         <button type="button" class="flex items-center justify-center p-1" on:click|stopPropagation={() => subTasksEg = subTasksEg.filter((_,i) => i !== index)}>
                             <Icon icon="lsicon:close-small-outline" class="text-lg" />
                             <span class="sr-only">Remove Subtask</span>

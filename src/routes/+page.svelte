@@ -211,7 +211,7 @@
                                                             {#if checkDueDate(task.due_date).is_due && !task.is_completed}
                                                                 <span class="text-red-500 mt-3 text-xs font-semibold font-quicksand">Task is due</span>
 
-                                                                {:else if checkDueDate(task.due_date).is_due_soon}
+                                                                {:else if checkDueDate(task.due_date).is_due_soon && !task.is_completed}
                                                                 <span class="text-orange-500 mt-3 text-xs font-semibold font-quicksand">Task will be due soon</span>
                                                             {/if}
                                                         {/if}

@@ -102,7 +102,7 @@
             
             <div class="flex w-full max-w-sm flex-col my-6">
                 <Label for="name" class="font-medium">Board Name</Label>
-                <Input type="text" name="name" id="board-name" value={boardBeingEditted?.name} placeholder="product launch" class="mt-3" />
+                <Input type="text" name="name" on:change={() => errors.name = null} id="board-name" value={boardBeingEditted?.name} placeholder="product launch" class="mt-3" />
                 {#if errors?.name}
                     <ErrorPara>
                         {errors?.name}
@@ -119,7 +119,10 @@
                         name="column-{index}" 
                         value={col.name} 
                         id="column-{index}" 
-                        on:change={(e) => edittedBoardColumns = edittedBoardColumns.map(((v,i) => i === index ? {...v, name: e.currentTarget.value } : v))}
+                        on:change={(e) => {
+                            errors.columns = null;
+                            edittedBoardColumns = edittedBoardColumns.map(((v,i) => i === index ? {...v, name: e.currentTarget.value } : v))
+                        }}
                         placeholder={col.name} 
                         class="flex-grow" 
                     />
