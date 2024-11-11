@@ -116,7 +116,7 @@
                 <Logo styles="w-40 lg:w-52 block" logoType="wht" />
             {/if}
         </header> 
-        <div class="h-screen lg:h-screen lg:min-h-[unset] lg:overflow-y-hidden pb-4">
+        <div class="min-h-screen h-screen lg:h-screen lg:min-h-[unset] lg:overflow-y-hidden pb-4">
             <h1 class="sr-only">Task Manager Dashboard</h1>
             
             
