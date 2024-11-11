@@ -8,6 +8,7 @@
 	import {invalidateAll } from "$app/navigation";
 	import { alertStore, snackbarStore } from "$lib/store";
 	import { AlertSeverity } from "../../enums";
+	import { createEventDispatcher } from "svelte";
 
 
     export let boardID : string;
