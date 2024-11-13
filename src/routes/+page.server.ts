@@ -13,6 +13,7 @@ export const load = async ({ locals: { supabase } }) => {
         if (!userID){
             throw new Error("Unauthorized request (unauthenticated user)")
         }
+
         const getBoardsRes = await axios.get(`${PUBLIC_BACKEND_URL}/boards/${userID}`,{
             headers: {
                 Authorization:  `Bearer ${accessToken || ""}`
